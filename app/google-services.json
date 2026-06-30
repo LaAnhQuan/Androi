@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "396863459405",
+    "project_id": "appmobie-ccbf3",
+    "storage_bucket": "appmobie-ccbf3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396863459405:android:08bff2d6abdb0d05248c04",
+        "android_client_info": {
+          "package_name": "com.shopping.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3EaS5T_V6h9KyxFFqKY7yZSI_2ICdQCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
