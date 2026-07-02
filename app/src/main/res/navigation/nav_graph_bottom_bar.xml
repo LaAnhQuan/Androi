@@ -30,6 +30,21 @@
             app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.shopping.app.ui.notifications.NotificationsFragment"
+        android:label="NotificationsFragment"
+        tools:layout="@layout/fragment_notifications" >
+        <action
+            android:id="@+id/action_notificationsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_sellerOrdersFragment"
+            app:destination="@id/sellerOrdersFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_orderHistoryFragment"
+            app:destination="@id/orderHistoryFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/profileFragment"
         android:name="com.shopping.app.ui.main.profile.ProfileFragment"
         android:label="ProfileFragment" >

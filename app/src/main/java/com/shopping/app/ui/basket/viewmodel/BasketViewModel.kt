@@ -6,10 +6,13 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.shopping.app.R
 import com.shopping.app.data.model.DataState
+import com.shopping.app.data.model.Notification
 import com.shopping.app.data.model.Order
 import com.shopping.app.data.model.ProductBasket
 import com.shopping.app.data.repository.basket.BasketRepository
+import com.shopping.app.data.repository.notification.NotificationRepositoryImpl
 import com.shopping.app.data.repository.order.OrderRepository
+import com.shopping.app.utils.Constants
 
 class BasketViewModel(
     private val basketRepository: BasketRepository,
@@ -139,6 +142,31 @@ class BasketViewModel(
                 sellerIds = sellerIds
             )
             orderRepository.addOrder(order)
+
+            val notificationRepository = NotificationRepositoryImpl()
+
+            // notify the BUYER that the order was placed successfully
+            val orderTotal = _basketTotalLiveData.value ?: 0.0
+            notificationRepository.addNotification(
+                Notification(
+                    userId = uid,
+                    title = "Order placed",
+                    body = "Your order was placed successfully. Total: %.2f$".format(orderTotal),
+                    type = Constants.NOTIFICATION_TYPE_ORDER_PLACED
+                )
+            )
+
+            // notify each seller that they got a new order
+            for (sellerId in sellerIds) {
+                notificationRepository.addNotification(
+                    Notification(
+                        userId = sellerId,
+                        title = "New order",
+                        body = "You have a new order for your shop.",
+                        type = Constants.NOTIFICATION_TYPE_ORDER
+                    )
+                )
+            }
         }
 
         basketList.forEach {

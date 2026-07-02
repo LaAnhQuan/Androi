@@ -28,6 +28,12 @@ object Constants {
     // Presence (online status)
     const val DATABASE_STATUS_TABLE = "status"
 
+    // Notifications
+    const val DATABASE_NOTIFICATIONS_TABLE = "notifications"
+    const val NOTIFICATION_TYPE_MESSAGE = "message"
+    const val NOTIFICATION_TYPE_ORDER = "order"              // seller: new order
+    const val NOTIFICATION_TYPE_ORDER_PLACED = "order_placed" // buyer: order placed
+
     // Chat
     const val DATABASE_CHATS_TABLE = "chats"
     const val DATABASE_MESSAGES_TABLE = "messages"

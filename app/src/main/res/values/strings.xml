@@ -53,6 +53,11 @@
     <string name="products">Products</string>
     <string name="search">Search</string>
     <string name="profile">Profile</string>
+    <string name="notifications">Notifications</string>
+    <string name="no_notifications">No notifications yet</string>
+    <string name="notif_new_message">New message</string>
+    <string name="notif_new_order_title">New order</string>
+    <string name="notif_new_order_body">You have a new order for your shop.</string>
     <string name="no_data">No data</string>
     <string name="currency_unit">%.2f$</string>
 

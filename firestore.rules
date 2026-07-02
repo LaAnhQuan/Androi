@@ -105,6 +105,18 @@ service cloud.firestore {
       }
     }
 
+    // ---------- NOTIFICATIONS ----------
+    match /notifications/{notifId} {
+      // Chỉ người nhận (userId) hoặc admin được đọc
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.userId == uid());
+      // Người đăng nhập được tạo thông báo gửi cho người khác (tin nhắn / đơn hàng)
+      allow create: if isSignedIn();
+      // Người nhận sửa (đánh dấu đã đọc) / xóa thông báo của mình; admin toàn quyền
+      allow update, delete: if isAdmin()
+        || (isSignedIn() && resource.data.userId == uid());
+    }
+
     // ---------- STATUS (online / last seen) ----------
     match /status/{userId} {
       // Ai đăng nhập cũng đọc được (để biết đối phương online)

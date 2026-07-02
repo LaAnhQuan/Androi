@@ -17,10 +17,12 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.shopping.app.R
 import com.shopping.app.data.model.Chat
 import com.shopping.app.data.model.ChatMessage
+import com.shopping.app.data.model.Notification
 import com.shopping.app.data.model.UserStatus
 import com.shopping.app.data.preference.UserPref
 import com.shopping.app.data.presence.PresenceManager
 import com.shopping.app.data.repository.chat.ChatRepositoryImpl
+import com.shopping.app.data.repository.notification.NotificationRepositoryImpl
 import com.shopping.app.databinding.FragmentChatBinding
 import com.shopping.app.ui.chat.adapter.MessageAdapter
 import com.shopping.app.ui.chat.viewmodel.ChatViewModel
@@ -159,6 +161,18 @@ class ChatFragment : Fragment() {
 
         viewModel.send(chat, message)
         bnd.etMessage.setText("")
+
+        // notify the receiver about the new message
+        NotificationRepositoryImpl().addNotification(
+            Notification(
+                userId = otherUid,
+                title = getString(R.string.notif_new_message) + ": " + myName,
+                body = text,
+                type = Constants.NOTIFICATION_TYPE_MESSAGE,
+                fromUid = myUid,
+                fromName = myName
+            )
+        )
 
     }
 
