@@ -143,8 +143,10 @@ class ChatFragment : Fragment() {
 
         val now = System.currentTimeMillis()
 
+        // sentAt is left null on purpose -> Firestore sets it to the SERVER time,
+        // so message order is consistent across devices (no clock-skew bug).
         // attach the product to the first message only, so the seller knows what it's about
-        val message = ChatMessage(senderId = myUid, text = text, sentAt = now, productJson = pendingProductJson)
+        val message = ChatMessage(senderId = myUid, text = text, productJson = pendingProductJson)
         pendingProductJson = null
 
         val chat = Chat(

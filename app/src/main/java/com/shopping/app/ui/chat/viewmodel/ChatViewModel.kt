@@ -3,6 +3,7 @@ package com.shopping.app.ui.chat.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import com.shopping.app.data.model.Chat
 import com.shopping.app.data.model.ChatMessage
@@ -22,7 +23,17 @@ class ChatViewModel(private val chatRepository: ChatRepository) : ViewModel() {
         registration = chatRepository.getMessages(chatId)
             .addSnapshotListener { value, error ->
                 if (error == null && value != null) {
-                    _messagesLiveData.value = value.toObjects(ChatMessage::class.java)
+                    val messages = value.documents.mapNotNull { doc ->
+                        // ESTIMATE gives a just-sent message a local time until the
+                        // server confirms, so it shows a time immediately and in order.
+                        runCatching {
+                            doc.toObject(
+                                ChatMessage::class.java,
+                                DocumentSnapshot.ServerTimestampBehavior.ESTIMATE
+                            )
+                        }.getOrNull()
+                    }
+                    _messagesLiveData.value = messages
                 }
             }
 

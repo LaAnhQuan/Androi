@@ -55,7 +55,8 @@ class MessageAdapter(
         fun bind(message: ChatMessage) {
 
             tv.text = message.text
-            tvTime.text = timeFormat.format(Date(message.sentAt ?: 0L))
+            val date = message.sentAt?.toDate()
+            tvTime.text = if (date != null) timeFormat.format(date) else ""
 
             val isMine = message.senderId == myUid
             row.gravity = if (isMine) Gravity.END else Gravity.START
