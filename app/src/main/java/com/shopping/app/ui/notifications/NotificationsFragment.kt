@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.shopping.app.R
 import com.shopping.app.data.model.Notification
 import com.shopping.app.data.repository.notification.NotificationRepositoryImpl
@@ -40,6 +41,13 @@ class NotificationsFragment : Fragment() {
             bnd.tvNotifEmpty.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // opening the tab = seen -> clear unread badge
+        val uid = FirebaseAuth.getInstance().uid
+        if (uid != null) NotificationRepositoryImpl().markAllAsRead(uid)
     }
 
     private fun onNotificationClick(n: Notification) {

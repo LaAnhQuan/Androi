@@ -10,4 +10,6 @@ interface NotificationRepository {
 
     fun getNotifications(uid: String): Query
 
+    fun markAllAsRead(uid: String)
+
 }

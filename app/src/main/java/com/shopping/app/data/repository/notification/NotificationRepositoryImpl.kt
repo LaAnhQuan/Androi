@@ -23,4 +23,20 @@ class NotificationRepositoryImpl : NotificationRepository {
         return notifications().whereEqualTo("userId", uid)
     }
 
+    override fun markAllAsRead(uid: String) {
+        notifications().whereEqualTo("userId", uid).get()
+            .addOnSuccessListener { snapshot ->
+                val batch = Firebase.firestore.batch()
+                var count = 0
+                for (doc in snapshot.documents) {
+                    val read = doc.getBoolean("read") ?: false
+                    if (!read) {
+                        batch.update(doc.reference, "read", true)
+                        count++
+                    }
+                }
+                if (count > 0) batch.commit()
+            }
+    }
+
 }
