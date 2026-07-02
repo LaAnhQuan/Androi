@@ -23,6 +23,8 @@ data class Product(
     var title: String? = null,
     @SerializedName("sellerId")
     var sellerId: String? = null,
+    @SerializedName("sellerName")
+    var sellerName: String? = null,
     @SerializedName("stock")
     var stock: Int? = null
 ): Parcelable {

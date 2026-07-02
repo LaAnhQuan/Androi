@@ -13,6 +13,9 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
     val addProductLiveData: LiveData<DataState<Boolean>>
         get() = _addProductLiveData
 
+    // set by the fragment from the logged-in user's username
+    var sellerName: String = ""
+
     fun onSaveClicked(
         title: String,
         priceText: String,
@@ -43,6 +46,7 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
             image = image,
             price = price,
             title = title,
+            sellerName = sellerName,
             stock = stock
         )
 

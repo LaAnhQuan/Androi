@@ -55,6 +55,14 @@ class ProfileFragment : Fragment() {
         findNavController().navigate(R.id.action_profileFragment_to_adminFragment)
     }
 
+    fun goMessages(){
+        findNavController().navigate(R.id.action_profileFragment_to_chatListFragment)
+    }
+
+    fun goOrders(){
+        findNavController().navigate(R.id.action_profileFragment_to_orderHistoryFragment)
+    }
+
     fun signOutDialog(){
 
         AlertDialog.Builder(requireContext())

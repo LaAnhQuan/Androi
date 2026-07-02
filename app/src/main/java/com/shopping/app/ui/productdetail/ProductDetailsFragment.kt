@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.shopping.app.R
 import com.shopping.app.data.model.DataState
 import com.shopping.app.data.model.Product
@@ -18,12 +19,14 @@ import com.shopping.app.databinding.FragmentProductDetailsBinding
 import com.shopping.app.ui.loadingprogress.LoadingProgressBar
 import com.shopping.app.ui.productdetail.viewmodel.ProductDetailViewModel
 import com.shopping.app.ui.productdetail.viewmodel.ProductDetailViewModelFactory
+import com.shopping.app.utils.Constants
 import com.shopping.app.utils.Constants.PRODUCT_MODEL_NAME
 
 class ProductDetailsFragment : Fragment() {
 
     private lateinit var bnd: FragmentProductDetailsBinding
     private lateinit var loadingProgressBar: LoadingProgressBar
+    private var currentProduct: Product? = null
     private val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModelFactory(
             BasketRepositoryImpl()
@@ -78,6 +81,7 @@ class ProductDetailsFragment : Fragment() {
             productData?.let { safeData ->
 
                 val product = Product.fromJson(safeData)
+                currentProduct = product
                 bnd.dataHolder = product
 
                 viewModel.productCountLiveData.observe(viewLifecycleOwner){ value ->
@@ -91,6 +95,35 @@ class ProductDetailsFragment : Fragment() {
 
     fun goBack(){
         findNavController().popBackStack()
+    }
+
+    fun chatWithSeller(){
+
+        val sellerId = currentProduct?.sellerId
+
+        // seeded/demo products have sellerId "seed" (no real user to chat with)
+        if (sellerId.isNullOrBlank() || sellerId == "seed") {
+            Toast.makeText(context, "This product has no seller to chat with.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // can't chat with yourself (your own product)
+        if (sellerId == FirebaseAuth.getInstance().uid) {
+            Toast.makeText(context, "This is your own product.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val sellerName = currentProduct?.sellerName?.takeIf { it.isNotBlank() } ?: "Seller"
+
+        findNavController().navigate(
+            R.id.action_productDetailsFragment_to_chatFragment,
+            Bundle().apply {
+                putString(Constants.CHAT_OTHER_UID, sellerId)
+                putString(Constants.CHAT_OTHER_NAME, sellerName)
+                putString(Constants.CHAT_PRODUCT_JSON, currentProduct?.toJson())
+            }
+        )
+
     }
 
 }

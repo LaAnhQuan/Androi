@@ -3,12 +3,18 @@ package com.shopping.app.ui.basket.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.shopping.app.R
 import com.shopping.app.data.model.DataState
+import com.shopping.app.data.model.Order
 import com.shopping.app.data.model.ProductBasket
 import com.shopping.app.data.repository.basket.BasketRepository
+import com.shopping.app.data.repository.order.OrderRepository
 
-class BasketViewModel(private val basketRepository: BasketRepository) : ViewModel() {
+class BasketViewModel(
+    private val basketRepository: BasketRepository,
+    private val orderRepository: OrderRepository
+) : ViewModel() {
 
     private var _basketTotalLiveData = MutableLiveData<Double>()
     val basketTotalLiveData: LiveData<Double>
@@ -117,6 +123,18 @@ class BasketViewModel(private val basketRepository: BasketRepository) : ViewMode
     }
 
     fun clearTheBasket(){
+
+        // save an order (history) before emptying the basket
+        val uid = FirebaseAuth.getInstance().uid
+        if (uid != null && basketList.isNotEmpty()) {
+            val order = Order(
+                buyerId = uid,
+                items = basketList.toList(),
+                total = _basketTotalLiveData.value ?: 0.0,
+                createdAt = System.currentTimeMillis()
+            )
+            orderRepository.addOrder(order)
+        }
 
         basketList.forEach {
             deleteProduct(it)

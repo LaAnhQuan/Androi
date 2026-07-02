@@ -19,6 +19,18 @@
             android:orientation="vertical"
             android:layout_marginHorizontal="24dp">
 
+            <ImageView
+                android:id="@+id/ivAddProductBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_arrow_left"
+                android:background="@drawable/bg_arrow_back"
+                android:padding="8dp"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/previous"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -27,7 +39,7 @@
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:layout_marginTop="24dp"/>
+                android:layout_marginTop="8dp"/>
 
             <EditText
                 android:id="@+id/etTitle"

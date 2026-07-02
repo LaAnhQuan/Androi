@@ -21,4 +21,17 @@ object Constants {
     const val DATA_STORE_USER = "data_store_user"
     const val PRODUCT_MODEL_NAME = "product_model"
 
+    // Orders
+    const val DATABASE_ORDERS_TABLE = "orders"
+
+    // Presence (online status)
+    const val DATABASE_STATUS_TABLE = "status"
+
+    // Chat
+    const val DATABASE_CHATS_TABLE = "chats"
+    const val DATABASE_MESSAGES_TABLE = "messages"
+    const val CHAT_OTHER_UID = "chat_other_uid"
+    const val CHAT_OTHER_NAME = "chat_other_name"
+    const val CHAT_PRODUCT_JSON = "chat_product_json"
+
 }

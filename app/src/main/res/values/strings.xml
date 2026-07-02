@@ -67,6 +67,23 @@
     <string name="cannot_delete_self">You cannot delete your own account.</string>
     <string name="delete">Delete</string>
 
+    <!-- Chat -->
+    <string name="messages">Messages</string>
+    <string name="no_conversations">No conversations yet</string>
+    <string name="type_message">Type a message…</string>
+    <string name="send_message">Send</string>
+    <string name="chat_with_seller">Chat with seller</string>
+    <string name="my_messages">MY MESSAGES</string>
+    <string name="view_product">View product ›</string>
+    <string name="status_online">Online</string>
+    <string name="status_last_seen">Last seen %s</string>
+
+    <!-- Orders -->
+    <string name="order_history">Order History</string>
+    <string name="my_orders">ORDER HISTORY</string>
+    <string name="no_orders">You have no orders yet</string>
+    <string name="order_total">Total: %.2f$</string>
+
     <!-- Profile -->
     <string name="sign_out">SIGN OUT</string>
     <string name="sign_out_message">Are you sure want to sign out of your account?</string>

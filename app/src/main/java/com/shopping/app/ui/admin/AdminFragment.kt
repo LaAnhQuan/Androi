@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -42,6 +43,7 @@ class AdminFragment : Fragment() {
 
         loadingProgressBar = LoadingProgressBar(requireContext())
         bnd.rvUsers.layoutManager = LinearLayoutManager(requireContext())
+        bnd.ivAdminBack.setOnClickListener { findNavController().popBackStack() }
 
         viewModel.usersLiveData.observe(viewLifecycleOwner) {
             when (it) {

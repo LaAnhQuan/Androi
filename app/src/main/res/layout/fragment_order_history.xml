@@ -8,7 +8,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/ivAdminBack"
+            android:id="@+id/ivOrderBack"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_arrow_left"
@@ -22,10 +22,10 @@
             app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
-            android:id="@+id/tvAdminTitle"
+            android:id="@+id/tvOrderTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/admin_panel_users"
+            android:text="@string/order_history"
             android:textColor="@color/main_color"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -34,13 +34,25 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvUsers"
+            android:id="@+id/rvOrders"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:paddingBottom="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tvAdminTitle"
+            app:layout_constraintTop_toBottomOf="@id/tvOrderTitle"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvOrderEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_orders"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

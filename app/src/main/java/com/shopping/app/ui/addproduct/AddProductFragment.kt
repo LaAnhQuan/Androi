@@ -12,11 +12,15 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.shopping.app.R
 import com.shopping.app.data.model.DataState
+import com.shopping.app.data.preference.UserPref
 import com.shopping.app.data.repository.product.ProductRepositoryImpl
 import com.shopping.app.databinding.FragmentAddProductBinding
 import com.shopping.app.ui.addproduct.viewmodel.AddProductViewModel
 import com.shopping.app.ui.addproduct.viewmodel.AddProductViewModelFactory
 import com.shopping.app.ui.loadingprogress.LoadingProgressBar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AddProductFragment : Fragment() {
 
@@ -36,6 +40,14 @@ class AddProductFragment : Fragment() {
 
         bnd.viewModel = viewModel
         loadingProgressBar = LoadingProgressBar(requireContext())
+
+        // remember the seller's display name so it can be stored on the product
+        val userPref = UserPref(requireContext())
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.sellerName = userPref.getUsername()
+        }
+
+        bnd.ivAddProductBack.setOnClickListener { findNavController().popBackStack() }
 
         viewModel.addProductLiveData.observe(viewLifecycleOwner) {
             when (it) {

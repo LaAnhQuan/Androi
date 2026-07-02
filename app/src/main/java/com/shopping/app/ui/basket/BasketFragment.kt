@@ -16,6 +16,7 @@ import com.shopping.app.R
 import com.shopping.app.data.model.DataState
 import com.shopping.app.data.model.ProductBasket
 import com.shopping.app.data.repository.basket.BasketRepositoryImpl
+import com.shopping.app.data.repository.order.OrderRepositoryImpl
 import com.shopping.app.databinding.FragmentBasketBinding
 import com.shopping.app.ui.basket.adapter.BasketProductsAdapter
 import com.shopping.app.ui.basket.viewmodel.BasketViewModel
@@ -28,7 +29,8 @@ class BasketFragment : BottomSheetDialogFragment(), ProductPieceUpdateListener {
     private lateinit var loadingProgressBar: LoadingProgressBar
     private val viewModel by viewModels<BasketViewModel> {
         BasketViewModelFactory(
-            BasketRepositoryImpl()
+            BasketRepositoryImpl(),
+            OrderRepositoryImpl()
         )
     }
 
