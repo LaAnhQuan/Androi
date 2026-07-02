@@ -10,4 +10,6 @@ interface OrderRepository {
 
     fun getUserOrders(uid: String): Task<QuerySnapshot>
 
+    fun getSellerOrders(uid: String): Task<QuerySnapshot>
+
 }

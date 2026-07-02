@@ -22,4 +22,9 @@ class OrderRepositoryImpl : OrderRepository {
         return orders().whereEqualTo("buyerId", uid).get()
     }
 
+    override fun getSellerOrders(uid: String): Task<QuerySnapshot> {
+        // orders that contain at least one product from this seller
+        return orders().whereArrayContains("sellerIds", uid).get()
+    }
+
 }

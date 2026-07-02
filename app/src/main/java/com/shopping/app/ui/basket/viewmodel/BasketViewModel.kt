@@ -127,11 +127,16 @@ class BasketViewModel(
         // save an order (history) before emptying the basket
         val uid = FirebaseAuth.getInstance().uid
         if (uid != null && basketList.isNotEmpty()) {
+            val sellerIds = basketList.mapNotNull { it.sellerId }
+                .filter { it.isNotBlank() }
+                .distinct()
+
             val order = Order(
                 buyerId = uid,
                 items = basketList.toList(),
                 total = _basketTotalLiveData.value ?: 0.0,
-                createdAt = System.currentTimeMillis()
+                createdAt = System.currentTimeMillis(),
+                sellerIds = sellerIds
             )
             orderRepository.addOrder(order)
         }

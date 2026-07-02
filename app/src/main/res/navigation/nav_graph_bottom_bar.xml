@@ -45,7 +45,15 @@
         <action
             android:id="@+id/action_profileFragment_to_myProductsFragment"
             app:destination="@id/myProductsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_sellerOrdersFragment"
+            app:destination="@id/sellerOrdersFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/sellerOrdersFragment"
+        android:name="com.shopping.app.ui.sellerorders.SellerOrdersFragment"
+        android:label="SellerOrdersFragment"
+        tools:layout="@layout/fragment_seller_orders" />
     <fragment
         android:id="@+id/myProductsFragment"
         android:name="com.shopping.app.ui.myproducts.MyProductsFragment"

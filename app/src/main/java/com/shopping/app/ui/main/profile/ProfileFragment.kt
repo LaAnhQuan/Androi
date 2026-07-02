@@ -47,9 +47,10 @@ class ProfileFragment : Fragment() {
             bnd.btnAdminPanel.visibility =
                 if (role == Constants.ROLE_ADMIN) View.VISIBLE else View.GONE
 
-            // Seller/Admin see the "My Products" button
-            bnd.btnMyProducts.visibility =
-                if (role == Constants.ROLE_SELLER || role == Constants.ROLE_ADMIN) View.VISIBLE else View.GONE
+            // Seller/Admin see the "My Products" and "Shop Orders" buttons
+            val isSellerOrAdmin = role == Constants.ROLE_SELLER || role == Constants.ROLE_ADMIN
+            bnd.btnMyProducts.visibility = if (isSellerOrAdmin) View.VISIBLE else View.GONE
+            bnd.btnShopOrders.visibility = if (isSellerOrAdmin) View.VISIBLE else View.GONE
 
         }
 
@@ -69,6 +70,10 @@ class ProfileFragment : Fragment() {
 
     fun goMyProducts(){
         findNavController().navigate(R.id.action_profileFragment_to_myProductsFragment)
+    }
+
+    fun goShopOrders(){
+        findNavController().navigate(R.id.action_profileFragment_to_sellerOrdersFragment)
     }
 
     fun signOutDialog(){

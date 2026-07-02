@@ -72,9 +72,12 @@ service cloud.firestore {
 
     // ---------- ORDERS (đơn hàng) ----------
     match /orders/{orderId} {
-      // Xem: admin xem tất cả; user xem đơn của mình
+      // Xem: admin xem tất cả; người mua xem đơn của mình;
+      //      seller xem đơn có chứa sản phẩm của shop mình (uid nằm trong sellerIds)
       allow read: if isAdmin()
-        || (isSignedIn() && resource.data.buyerId == uid());
+        || (isSignedIn() && resource.data.buyerId == uid())
+        || (isSignedIn() && resource.data.sellerIds != null
+            && uid() in resource.data.sellerIds);
 
       // Tạo đơn: phải là đơn của chính mình
       allow create: if isSignedIn() && request.resource.data.buyerId == uid();

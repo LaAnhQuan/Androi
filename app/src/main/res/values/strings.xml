@@ -91,6 +91,11 @@
     <string name="no_orders">You have no orders yet</string>
     <string name="order_total">Total: %.2f$</string>
 
+    <!-- Seller / shop orders -->
+    <string name="shop_orders">Shop Orders</string>
+    <string name="my_shop_orders">SHOP ORDERS</string>
+    <string name="no_shop_orders">No orders for your shop yet</string>
+
     <!-- Profile -->
     <string name="sign_out">SIGN OUT</string>
     <string name="sign_out_message">Are you sure want to sign out of your account?</string>
