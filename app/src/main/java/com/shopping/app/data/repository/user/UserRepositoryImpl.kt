@@ -2,6 +2,7 @@ package com.shopping.app.data.repository.user
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.shopping.app.data.model.User
@@ -32,6 +33,22 @@ class UserRepositoryImpl : UserRepository {
             .document(user.uid.toString())
             .set(userMap)
 
+    }
+
+    override fun getAllUsers(): Task<QuerySnapshot> {
+        return Firebase.firestore.collection(Constants.DATABASE_USERS_TABLE).get()
+    }
+
+    override fun updateUserRole(uid: String, role: String): Task<Void> {
+        return Firebase.firestore.collection(Constants.DATABASE_USERS_TABLE)
+            .document(uid)
+            .update(DATABASE_FIELD_ROLE, role)
+    }
+
+    override fun deleteUser(uid: String): Task<Void> {
+        return Firebase.firestore.collection(Constants.DATABASE_USERS_TABLE)
+            .document(uid)
+            .delete()
     }
 
 }

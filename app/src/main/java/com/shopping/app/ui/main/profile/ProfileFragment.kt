@@ -8,10 +8,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.shopping.app.R
 import com.shopping.app.data.preference.UserPref
 import com.shopping.app.databinding.FragmentProfileBinding
+import com.shopping.app.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,10 +40,19 @@ class ProfileFragment : Fragment() {
 
             bnd.username = userPref.getUsername()
             bnd.email = userPref.getEmail()
-            bnd.role = userPref.getRole()
+            val role = userPref.getRole()
+            bnd.role = role
+
+            // Only admins see the Admin Panel button
+            bnd.btnAdminPanel.visibility =
+                if (role == Constants.ROLE_ADMIN) View.VISIBLE else View.GONE
 
         }
 
+    }
+
+    fun goAdminPanel(){
+        findNavController().navigate(R.id.action_profileFragment_to_adminFragment)
     }
 
     fun signOutDialog(){

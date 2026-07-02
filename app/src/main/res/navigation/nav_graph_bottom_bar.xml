@@ -32,7 +32,16 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.shopping.app.ui.main.profile.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_adminFragment"
+            app:destination="@id/adminFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.shopping.app.ui.admin.AdminFragment"
+        android:label="AdminFragment"
+        tools:layout="@layout/fragment_admin" />
     <fragment
         android:id="@+id/productDetailsFragment"
         android:name="com.shopping.app.ui.productdetail.ProductDetailsFragment"
