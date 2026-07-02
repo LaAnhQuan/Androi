@@ -38,6 +38,7 @@ class ProfileFragment : Fragment() {
 
             bnd.username = userPref.getUsername()
             bnd.email = userPref.getEmail()
+            bnd.role = userPref.getRole()
 
         }
 

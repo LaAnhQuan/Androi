@@ -8,7 +8,8 @@ data class User(
     var password: String? = "",
     var passwordAgain: String? = "",
     var username: String? = "",
-    var uid: String? = ""
+    var uid: String? = "",
+    var role: String? = "customer"
 ) {
 
     fun isSignInFieldEmpty() : Boolean{

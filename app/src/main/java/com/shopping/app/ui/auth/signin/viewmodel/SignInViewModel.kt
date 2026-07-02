@@ -67,7 +67,9 @@ class SignInViewModel(
 
             if(error == null){
 
-                user.username = value?.toObject(User::class.java)?.username
+                val dbUser = value?.toObject(User::class.java)
+                user.username = dbUser?.username
+                user.role = dbUser?.role ?: com.shopping.app.utils.Constants.ROLE_CUSTOMER
                 userLiveData.value = DataState.Success(user)
 
             }else{

@@ -6,8 +6,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.shopping.app.data.model.User
 import com.shopping.app.utils.Constants
+import com.shopping.app.utils.Constants.DATABASE_FIELD_ROLE
 import com.shopping.app.utils.Constants.DATABASE_FIELD_UID
 import com.shopping.app.utils.Constants.DATABASE_FIELD_USERNAME
+import com.shopping.app.utils.Constants.ROLE_CUSTOMER
 
 class UserRepositoryImpl : UserRepository {
 
@@ -23,6 +25,7 @@ class UserRepositoryImpl : UserRepository {
         val userMap = hashMapOf(
             DATABASE_FIELD_USERNAME to user.username,
             DATABASE_FIELD_UID to user.uid,
+            DATABASE_FIELD_ROLE to (user.role ?: ROLE_CUSTOMER),
         )
 
         return Firebase.firestore.collection(Constants.DATABASE_USERS_TABLE)

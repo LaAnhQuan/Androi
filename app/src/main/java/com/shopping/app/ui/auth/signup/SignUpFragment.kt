@@ -84,6 +84,7 @@ class SignUpFragment : Fragment() {
 
             userPref.setUsername(user.username!!)
             userPref.setEmail(user.email!!)
+            userPref.setRole(user.role ?: com.shopping.app.utils.Constants.ROLE_CUSTOMER)
 
             findNavController().navigate(R.id.action_authFragment_to_mainMenuFragment)
 

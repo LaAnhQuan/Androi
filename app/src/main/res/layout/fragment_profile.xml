@@ -11,6 +11,9 @@
             name="username"
             type="String" />
         <variable
+            name="role"
+            type="String" />
+        <variable
             name="profileFragment"
             type="com.shopping.app.ui.main.profile.ProfileFragment" />
     </data>
@@ -56,6 +59,16 @@
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
                 android:text="@{email}"/>
+
+            <TextView
+                android:id="@+id/tvRole"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/main_color"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                android:text="@{`Role: ` + role}"/>
 
             <Button
                 android:id="@+id/btnSignOut"
