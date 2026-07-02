@@ -10,20 +10,29 @@ import com.shopping.app.utils.Constants
 
 class ProductRepositoryImpl : ProductRepository {
 
+    private fun products() = Firebase.firestore.collection(Constants.DATABASE_PRODUCTS_TABLE)
+
     override fun getProducts(): Task<QuerySnapshot> {
-        return Firebase.firestore.collection(Constants.DATABASE_PRODUCTS_TABLE).get()
+        return products().get()
     }
 
     override fun addProduct(product: Product): Task<Void> {
-
-        val collection = Firebase.firestore.collection(Constants.DATABASE_PRODUCTS_TABLE)
-        val doc = collection.document() // auto-generated id
-
+        val doc = products().document() // auto-generated id
         product.id = doc.id
         product.sellerId = FirebaseAuth.getInstance().uid
-
         return doc.set(product)
+    }
 
+    override fun getProductsBySeller(uid: String): Task<QuerySnapshot> {
+        return products().whereEqualTo("sellerId", uid).get()
+    }
+
+    override fun updateProduct(product: Product): Task<Void> {
+        return products().document(product.id!!).set(product)
+    }
+
+    override fun deleteProduct(productId: String): Task<Void> {
+        return products().document(productId).delete()
     }
 
 }

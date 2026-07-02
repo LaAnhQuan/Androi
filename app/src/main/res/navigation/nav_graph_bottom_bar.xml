@@ -42,6 +42,18 @@
         <action
             android:id="@+id/action_profileFragment_to_orderHistoryFragment"
             app:destination="@id/orderHistoryFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_myProductsFragment"
+            app:destination="@id/myProductsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myProductsFragment"
+        android:name="com.shopping.app.ui.myproducts.MyProductsFragment"
+        android:label="MyProductsFragment"
+        tools:layout="@layout/fragment_my_products" >
+        <action
+            android:id="@+id/action_myProductsFragment_to_addProductFragment"
+            app:destination="@id/addProductFragment" />
     </fragment>
     <fragment
         android:id="@+id/orderHistoryFragment"

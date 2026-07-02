@@ -32,6 +32,13 @@
 
     <!-- Add / Manage Product -->
     <string name="add_product">Add Product</string>
+    <string name="edit_product">Edit Product</string>
+    <string name="my_products">MY PRODUCTS</string>
+    <string name="my_products_title">My Products</string>
+    <string name="no_products">You have no products yet</string>
+    <string name="edit">Edit</string>
+    <string name="delete_product_confirm">Delete this product?</string>
+    <string name="product_deleted">Product deleted</string>
     <string name="product_title">Product name</string>
     <string name="product_price">Price</string>
     <string name="product_description">Description</string>

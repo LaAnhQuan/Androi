@@ -10,4 +10,10 @@ interface ProductRepository {
 
     fun addProduct(product: Product): Task<Void>
 
+    fun getProductsBySeller(uid: String): Task<QuerySnapshot>
+
+    fun updateProduct(product: Product): Task<Void>
+
+    fun deleteProduct(productId: String): Task<Void>
+
 }

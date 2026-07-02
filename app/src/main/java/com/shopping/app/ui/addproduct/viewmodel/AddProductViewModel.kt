@@ -16,6 +16,9 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
     // set by the fragment from the logged-in user's username
     var sellerName: String = ""
 
+    // set when editing an existing product (null = adding a new one)
+    var editingProduct: Product? = null
+
     fun onSaveClicked(
         title: String,
         priceText: String,
@@ -39,24 +42,39 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
         }
 
         val stock = stockText.toIntOrNull() ?: 0
+        val editing = editingProduct
 
-        val product = Product(
-            category = if (category.isBlank()) "other" else category,
-            description = description,
-            image = image,
-            price = price,
-            title = title,
-            sellerName = sellerName,
-            stock = stock
-        )
+        if (editing != null) {
 
-        productRepository.addProduct(product)
-            .addOnSuccessListener {
-                _addProductLiveData.value = DataState.Success(true)
-            }
-            .addOnFailureListener { e ->
-                _addProductLiveData.value = DataState.Error(e.message ?: "Error")
-            }
+            // update: keep id / sellerId / sellerName
+            editing.title = title
+            editing.price = price
+            editing.description = description
+            editing.image = image
+            editing.category = if (category.isBlank()) "other" else category
+            editing.stock = stock
+
+            productRepository.updateProduct(editing)
+                .addOnSuccessListener { _addProductLiveData.value = DataState.Success(true) }
+                .addOnFailureListener { e -> _addProductLiveData.value = DataState.Error(e.message ?: "Error") }
+
+        } else {
+
+            val product = Product(
+                category = if (category.isBlank()) "other" else category,
+                description = description,
+                image = image,
+                price = price,
+                title = title,
+                sellerName = sellerName,
+                stock = stock
+            )
+
+            productRepository.addProduct(product)
+                .addOnSuccessListener { _addProductLiveData.value = DataState.Success(true) }
+                .addOnFailureListener { e -> _addProductLiveData.value = DataState.Error(e.message ?: "Error") }
+
+        }
 
     }
 

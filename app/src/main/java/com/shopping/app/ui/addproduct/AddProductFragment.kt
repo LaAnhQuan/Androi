@@ -12,12 +12,14 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.shopping.app.R
 import com.shopping.app.data.model.DataState
+import com.shopping.app.data.model.Product
 import com.shopping.app.data.preference.UserPref
 import com.shopping.app.data.repository.product.ProductRepositoryImpl
 import com.shopping.app.databinding.FragmentAddProductBinding
 import com.shopping.app.ui.addproduct.viewmodel.AddProductViewModel
 import com.shopping.app.ui.addproduct.viewmodel.AddProductViewModelFactory
 import com.shopping.app.ui.loadingprogress.LoadingProgressBar
+import com.shopping.app.utils.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,6 +50,20 @@ class AddProductFragment : Fragment() {
         }
 
         bnd.ivAddProductBack.setOnClickListener { findNavController().popBackStack() }
+
+        // edit mode: prefill fields if a product was passed in
+        val editJson = arguments?.getString(Constants.EDIT_PRODUCT_JSON)
+        if (editJson != null) {
+            val product = Product.fromJson(editJson)
+            viewModel.editingProduct = product
+            bnd.tvAddTitle.text = getString(R.string.edit_product)
+            bnd.etTitle.setText(product.title ?: "")
+            bnd.etPrice.setText(product.price?.toString() ?: "")
+            bnd.etImage.setText(product.image ?: "")
+            bnd.etCategory.setText(product.category ?: "")
+            bnd.etStock.setText(product.stock?.toString() ?: "")
+            bnd.etDescription.setText(product.description ?: "")
+        }
 
         viewModel.addProductLiveData.observe(viewLifecycleOwner) {
             when (it) {

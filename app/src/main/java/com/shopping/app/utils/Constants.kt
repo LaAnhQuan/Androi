@@ -20,6 +20,7 @@ object Constants {
 
     const val DATA_STORE_USER = "data_store_user"
     const val PRODUCT_MODEL_NAME = "product_model"
+    const val EDIT_PRODUCT_JSON = "edit_product_json"
 
     // Orders
     const val DATABASE_ORDERS_TABLE = "orders"
