@@ -1,6 +1,7 @@
 package com.shopping.app.data.repository.chat
 
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
@@ -26,15 +27,17 @@ class ChatRepositoryImpl : ChatRepository {
             .orderBy("sentAt", Query.Direction.ASCENDING)
     }
 
-    override fun sendMessage(chat: Chat, message: ChatMessage): Task<Void> {
+    override fun sendMessage(chat: Chat, message: ChatMessage): Task<DocumentReference> {
 
         val doc = chats().document(chat.chatId!!)
 
-        // add the message to the sub-collection
-        doc.collection(Constants.DATABASE_MESSAGES_TABLE).add(message)
-
-        // update/create the conversation summary (merge so we don't wipe fields)
+        // 1) create/update the conversation summary FIRST (so security rules can
+        //    verify the sender is a participant before the message is written),
+        // 2) then add the message to the sub-collection.
         return doc.set(chat, SetOptions.merge())
+            .continueWithTask {
+                doc.collection(Constants.DATABASE_MESSAGES_TABLE).add(message)
+            }
 
     }
 

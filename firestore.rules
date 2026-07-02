@@ -1,0 +1,118 @@
+rules_version = '2';
+
+// Security Rules cho Shopping App
+// Dán toàn bộ nội dung file này vào:
+//   Firebase Console -> Firestore Database -> Rules -> (dán) -> Publish
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Helper functions ----------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function uid() {
+      return request.auth.uid;
+    }
+
+    function userDocExists() {
+      return exists(/databases/$(database)/documents/users/$(uid()));
+    }
+
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(uid())).data.role;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && userDocExists() && userRole() == 'admin';
+    }
+
+    function isSellerOrAdmin() {
+      return isSignedIn() && userDocExists()
+        && (userRole() == 'seller' || userRole() == 'admin');
+    }
+
+    // ---------- USERS ----------
+    match /users/{userId} {
+      // Chỉ chính chủ hoặc admin được đọc hồ sơ
+      allow read: if isSignedIn() && (uid() == userId || isAdmin());
+
+      // Tạo hồ sơ của chính mình khi đăng ký
+      allow create: if isSignedIn() && uid() == userId;
+
+      // Admin sửa được mọi user; user thường chỉ sửa hồ sơ MÌNH và
+      // KHÔNG được tự đổi role (chống tự phong admin)
+      allow update: if isAdmin()
+        || (isSignedIn() && uid() == userId
+            && request.resource.data.role == resource.data.role);
+
+      // Chỉ admin được xóa user
+      allow delete: if isAdmin();
+    }
+
+    // ---------- PRODUCTS ----------
+    match /products/{productId} {
+      // Ai cũng xem được sản phẩm (kể cả chưa đăng nhập)
+      allow read: if true;
+
+      // Chỉ seller/admin đăng sản phẩm, và phải gắn đúng sellerId = mình
+      allow create: if isSellerOrAdmin()
+        && request.resource.data.sellerId == uid();
+
+      // Sửa/xóa: admin hoặc chính chủ sản phẩm
+      allow update, delete: if isAdmin()
+        || (isSignedIn() && resource.data.sellerId == uid());
+    }
+
+    // ---------- BASKET (giỏ hàng): basket/{userId}/products/{productId} ----------
+    match /basket/{userId}/products/{productId} {
+      allow read, write: if isSignedIn() && uid() == userId;
+    }
+
+    // ---------- ORDERS (đơn hàng) ----------
+    match /orders/{orderId} {
+      // Xem: admin xem tất cả; user xem đơn của mình
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.buyerId == uid());
+
+      // Tạo đơn: phải là đơn của chính mình
+      allow create: if isSignedIn() && request.resource.data.buyerId == uid();
+
+      // Sửa/xóa đơn: chỉ admin
+      allow update, delete: if isAdmin();
+    }
+
+    // ---------- CHATS + MESSAGES ----------
+    match /chats/{chatId} {
+      // Chỉ người trong hội thoại được đọc/tạo/cập nhật
+      allow read:   if isSignedIn() && uid() in resource.data.participants;
+      allow create: if isSignedIn() && uid() in request.resource.data.participants;
+      allow update: if isSignedIn() && uid() in resource.data.participants;
+
+      match /messages/{messageId} {
+        // Đọc tin: phải là người trong hội thoại
+        allow read: if isSignedIn()
+          && uid() in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+
+        // Gửi tin: là người trong hội thoại và senderId = chính mình
+        allow create: if isSignedIn()
+          && request.resource.data.senderId == uid()
+          && uid() in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+      }
+    }
+
+    // ---------- STATUS (online / last seen) ----------
+    match /status/{userId} {
+      // Ai đăng nhập cũng đọc được (để biết đối phương online)
+      allow read: if isSignedIn();
+      // Mỗi người chỉ ghi trạng thái của CHÍNH mình
+      allow write: if isSignedIn() && uid() == userId;
+    }
+
+    // Mọi thứ khác: chặn
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
