@@ -7,6 +7,7 @@ import com.shopping.app.data.model.DataState
 import com.shopping.app.data.model.User
 import com.shopping.app.data.repository.auth.AuthRepository
 import com.shopping.app.data.repository.user.UserRepository
+import com.shopping.app.utils.Constants
 
 class SignUpViewModel(
     private val authRepository: AuthRepository,
@@ -16,10 +17,11 @@ class SignUpViewModel(
     val userLiveData = MutableLiveData<DataState<User>>()
     private lateinit var user: User
 
-    fun onSignUpClicked(username: String, email: String, password: String, passwordAgain: String){
+    fun onSignUpClicked(username: String, email: String, password: String, passwordAgain: String, isSeller: Boolean = false){
 
         userLiveData.value = DataState.Loading()
         user = User(email, password, passwordAgain, username)
+        user.role = if (isSeller) Constants.ROLE_SELLER else Constants.ROLE_CUSTOMER
         checkFields()
 
     }

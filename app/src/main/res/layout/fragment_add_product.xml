@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.shopping.app.ui.addproduct.viewmodel.AddProductViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_product"
+                android:textColor="@color/main_color"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="24dp"/>
+
+            <EditText
+                android:id="@+id/etTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:inputType="text"
+                android:hint="@string/product_title"
+                android:background="@drawable/bg_auth_text_field"
+                android:layout_marginTop="20dp"
+                android:autofillHints="name"/>
+
+            <EditText
+                android:id="@+id/etPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:inputType="numberDecimal"
+                android:hint="@string/product_price"
+                android:background="@drawable/bg_auth_text_field"
+                android:layout_marginTop="10dp"
+                android:autofillHints="off"/>
+
+            <EditText
+                android:id="@+id/etImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:inputType="textUri"
+                android:hint="@string/product_image_url"
+                android:background="@drawable/bg_auth_text_field"
+                android:layout_marginTop="10dp"
+                android:autofillHints="off"/>
+
+            <EditText
+                android:id="@+id/etCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:inputType="text"
+                android:hint="@string/product_category"
+                android:background="@drawable/bg_auth_text_field"
+                android:layout_marginTop="10dp"
+                android:autofillHints="off"/>
+
+            <EditText
+                android:id="@+id/etStock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:inputType="number"
+                android:hint="@string/product_stock"
+                android:background="@drawable/bg_auth_text_field"
+                android:layout_marginTop="10dp"
+                android:autofillHints="off"/>
+
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top"
+                android:hint="@string/product_description"
+                android:background="@drawable/bg_auth_text_field"
+                android:layout_marginTop="10dp"
+                android:autofillHints="off"/>
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
+                app:backgroundTint="@null"
+                android:background="@drawable/bg_auth_button"
+                android:onClick="@{() -> viewModel.onSaveClicked(etTitle.getText().toString(), etPrice.getText().toString(), etDescription.getText().toString(), etImage.getText().toString(), etCategory.getText().toString(), etStock.getText().toString())}"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>

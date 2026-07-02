@@ -28,6 +28,19 @@
     <string name="enter_valid_email">Please enter a valid email address!</string>
     <string name="passwords_dont_match">Passwords don\'t match!</string>
     <string name="password_greater_than_5">Password must be greater than 5 characters!</string>
+    <string name="register_as_seller">Register as Seller</string>
+
+    <!-- Add / Manage Product -->
+    <string name="add_product">Add Product</string>
+    <string name="product_title">Product name</string>
+    <string name="product_price">Price</string>
+    <string name="product_description">Description</string>
+    <string name="product_image_url">Image URL</string>
+    <string name="product_category">Category</string>
+    <string name="product_stock">Stock</string>
+    <string name="save">SAVE</string>
+    <string name="product_added_message">Product added successfully.</string>
+    <string name="product_fields_empty">Please fill name, price and image URL.</string>
 
     <!-- Main Menu Screen-->
     <string name="products">Products</string>

@@ -8,19 +8,23 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Product(
     @SerializedName("category")
-    val category: String?,
+    var category: String? = null,
     @SerializedName("description")
-    val description: String?,
+    var description: String? = null,
     @SerializedName("id")
-    val id: Int?,
+    var id: String? = null,
     @SerializedName("image")
-    val image: String?,
+    var image: String? = null,
     @SerializedName("price")
-    val price: Double?,
+    var price: Double? = null,
     @SerializedName("rating")
-    val rating: Rating?,
+    var rating: Rating? = null,
     @SerializedName("title")
-    val title: String?
+    var title: String? = null,
+    @SerializedName("sellerId")
+    var sellerId: String? = null,
+    @SerializedName("stock")
+    var stock: Int? = null
 ): Parcelable {
 
     // json convert method

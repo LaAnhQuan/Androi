@@ -6,9 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.shopping.app.data.model.DataState
 import com.shopping.app.data.model.Product
 import com.shopping.app.data.repository.product.ProductRepository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ProductViewModel(private val productRepository: ProductRepository) : ViewModel() {
 
@@ -23,27 +20,18 @@ class ProductViewModel(private val productRepository: ProductRepository) : ViewM
     private fun getProducts(){
 
         _productLiveData.postValue(DataState.Loading())
-        productRepository.getProducts().enqueue(object: Callback<List<Product>>{
-
-            override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
-
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        _productLiveData.postValue(DataState.Success(it))
-                    } ?: kotlin.run {
-                        _productLiveData.postValue(DataState.Error("Data Empty"))
-                    }
+        productRepository.getProducts()
+            .addOnSuccessListener { snapshot ->
+                val products = snapshot.toObjects(Product::class.java)
+                if (products.isNotEmpty()) {
+                    _productLiveData.postValue(DataState.Success(products))
                 } else {
-                    _productLiveData.postValue(DataState.Error(response.message()))
+                    _productLiveData.postValue(DataState.Error("Data Empty"))
                 }
-
             }
-
-            override fun onFailure(call: Call<List<Product>>, t: Throwable) {
-                _productLiveData.postValue(DataState.Error(t.message.toString()))
+            .addOnFailureListener { e ->
+                _productLiveData.postValue(DataState.Error(e.message.toString()))
             }
-
-        })
 
     }
 

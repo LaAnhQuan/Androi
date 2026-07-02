@@ -71,6 +71,15 @@
                 android:layout_marginTop="10dp"
                 android:autofillHints="password"/>
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchSeller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_as_seller"
+                android:textColor="@color/main_color"
+                android:textSize="16sp"
+                android:layout_marginTop="15dp"/>
+
             <Button
                 android:id="@+id/btnSignUp"
                 android:layout_width="match_parent"
@@ -79,7 +88,7 @@
                 android:layout_marginTop="15dp"
                 app:backgroundTint="@null"
                 android:background="@drawable/bg_auth_button"
-                android:onClick="@{() -> viewModel.onSignUpClicked(etUsername.getText().toString(), etEmail.getText().toString(), etPassword.getText().toString(), etPasswordAgain.getText().toString())}"/>
+                android:onClick="@{() -> viewModel.onSignUpClicked(etUsername.getText().toString(), etEmail.getText().toString(), etPassword.getText().toString(), etPasswordAgain.getText().toString(), switchSeller.isChecked())}"/>
 
         </LinearLayout>
 

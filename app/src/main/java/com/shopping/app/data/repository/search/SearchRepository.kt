@@ -1,14 +1,12 @@
 package com.shopping.app.data.repository.search
 
-import com.shopping.app.data.model.Product
-import retrofit2.Call
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.QuerySnapshot
 
 interface SearchRepository {
 
-    fun getProducts(): Call<List<Product>>
+    fun getProducts(): Task<QuerySnapshot>
 
-    fun getProductsByCategory(category: String): Call<List<Product>>
-
-    fun getCategories(): Call<List<String>>
+    fun getProductsByCategory(category: String): Task<QuerySnapshot>
 
 }

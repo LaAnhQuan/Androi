@@ -4,20 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.shopping.app.R
-import com.shopping.app.data.api.ApiClient
 import com.shopping.app.data.model.DataState
+import com.shopping.app.data.preference.UserPref
 import com.shopping.app.data.repository.product.ProductRepositoryImpl
 import com.shopping.app.databinding.FragmentProductBinding
 import com.shopping.app.ui.loadingprogress.LoadingProgressBar
 import com.shopping.app.ui.main.product.adapter.ProductAdapter
 import com.shopping.app.ui.main.product.viewmodel.ProductViewModel
 import com.shopping.app.ui.main.product.viewmodel.ProductViewModelFactory
+import com.shopping.app.utils.Constants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ProductFragment : Fragment() {
 
@@ -26,9 +32,7 @@ class ProductFragment : Fragment() {
     private lateinit var loadingProgressBar: LoadingProgressBar
     private val viewModel by viewModels<ProductViewModel> {
         ProductViewModelFactory(
-            ProductRepositoryImpl(
-                ApiClient.getApiService()
-            )
+            ProductRepositoryImpl()
         )
     }
 
@@ -42,6 +46,8 @@ class ProductFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loadingProgressBar = LoadingProgressBar(requireContext())
+
+        setupAddProductButton()
 
         viewModel.productLiveData.observe(viewLifecycleOwner){
 
@@ -66,6 +72,27 @@ class ProductFragment : Fragment() {
                 }
             }
 
+        }
+
+    }
+
+    // Show the "+" button only for seller / admin, then open the Add Product screen
+    private fun setupAddProductButton(){
+
+        val userPref = UserPref(requireContext())
+        CoroutineScope(Dispatchers.Main).launch {
+
+            val role = userPref.getRole()
+            if (role == Constants.ROLE_SELLER || role == Constants.ROLE_ADMIN) {
+                bnd.fabAddProduct.visibility = VISIBLE
+            } else {
+                bnd.fabAddProduct.visibility = GONE
+            }
+
+        }
+
+        bnd.fabAddProduct.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_addProductFragment)
         }
 
     }

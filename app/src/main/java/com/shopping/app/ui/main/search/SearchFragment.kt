@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.shopping.app.R
-import com.shopping.app.data.api.ApiClient
 import com.shopping.app.data.model.CategoryModel
 import com.shopping.app.data.model.DataState
 import com.shopping.app.data.repository.search.SearchRepositoryImpl
@@ -29,9 +28,7 @@ class SearchFragment : Fragment(), CategoryClickListener, SearchView.OnQueryText
     private lateinit var loadingProgressBar: LoadingProgressBar
     private val viewModel by viewModels<SearchViewModel> {
         SearchViewModelFactory(
-            SearchRepositoryImpl(
-                ApiClient.getApiService()
-            )
+            SearchRepositoryImpl()
         )
     }
 
