@@ -71,6 +71,12 @@ service cloud.firestore {
       allow write: if isSellerOrAdmin();    // seller/admin quản lý danh mục
     }
 
+    // ---------- BANNERS ----------
+    match /banners/{bannerId} {
+      allow read: if true;         // ai cũng xem banner
+      allow write: if isAdmin();   // chỉ admin quản lý banner
+    }
+
     // ---------- BASKET (giỏ hàng): basket/{userId}/products/{productId} ----------
     match /basket/{userId}/products/{productId} {
       allow read, write: if isSignedIn() && uid() == userId;
