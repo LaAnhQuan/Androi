@@ -18,6 +18,11 @@ class SellerOrdersViewModel(private val orderRepository: OrderRepository) : View
         getOrders()
     }
 
+    fun updateStatus(orderId: String, status: String) {
+        orderRepository.updateOrderStatus(orderId, status)
+            .addOnSuccessListener { getOrders() }
+    }
+
     private fun getOrders() {
 
         val uid = FirebaseAuth.getInstance().uid

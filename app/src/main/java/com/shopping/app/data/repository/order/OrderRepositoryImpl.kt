@@ -27,4 +27,8 @@ class OrderRepositoryImpl : OrderRepository {
         return orders().whereArrayContains("sellerIds", uid).get()
     }
 
+    override fun updateOrderStatus(orderId: String, status: String): Task<Void> {
+        return orders().document(orderId).update("status", status)
+    }
+
 }

@@ -27,6 +27,9 @@ object Constants {
 
     // Orders
     const val DATABASE_ORDERS_TABLE = "orders"
+    const val ORDER_STATUS_PENDING = "pending"
+    const val ORDER_STATUS_SHIPPING = "shipping"
+    const val ORDER_STATUS_COMPLETED = "completed"
 
     // Presence (online status)
     const val DATABASE_STATUS_TABLE = "status"

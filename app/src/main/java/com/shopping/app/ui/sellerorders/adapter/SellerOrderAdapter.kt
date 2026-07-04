@@ -4,17 +4,20 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.shopping.app.R
 import com.shopping.app.data.model.Order
+import com.shopping.app.ui.order.adapter.OrderAdapter
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class SellerOrderAdapter(
     private var orders: List<Order>,
-    private val myUid: String
+    private val myUid: String,
+    private val onUpdateStatus: (Order) -> Unit
 ) : RecyclerView.Adapter<SellerOrderAdapter.SellerOrderViewHolder>() {
 
     private val dateFormat = SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault())
@@ -35,11 +38,18 @@ class SellerOrderAdapter(
         private val tvDate: TextView = itemView.findViewById(R.id.tvOrderDate)
         private val tvItems: TextView = itemView.findViewById(R.id.tvOrderItems)
         private val tvTotal: TextView = itemView.findViewById(R.id.tvOrderTotal)
+        private val tvStatus: TextView = itemView.findViewById(R.id.tvOrderStatus)
+        private val btnUpdate: Button = itemView.findViewById(R.id.btnUpdateStatus)
 
         @SuppressLint("SetTextI18n")
         fun bind(order: Order) {
 
             tvDate.text = dateFormat.format(Date(order.createdAt ?: 0L))
+            tvStatus.text = OrderAdapter.statusLabel(order.status)
+
+            // seller can update the order status
+            btnUpdate.visibility = View.VISIBLE
+            btnUpdate.setOnClickListener { onUpdateStatus(order) }
 
             // only this seller's items in the order
             val myItems = (order.items ?: emptyList()).filter { it.sellerId == myUid }

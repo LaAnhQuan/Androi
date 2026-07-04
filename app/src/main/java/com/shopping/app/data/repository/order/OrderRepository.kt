@@ -12,4 +12,6 @@ interface OrderRepository {
 
     fun getSellerOrders(uid: String): Task<QuerySnapshot>
 
+    fun updateOrderStatus(orderId: String, status: String): Task<Void>
+
 }

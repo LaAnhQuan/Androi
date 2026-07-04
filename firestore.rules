@@ -111,8 +111,16 @@ service cloud.firestore {
       // Tạo đơn: phải là đơn của chính mình
       allow create: if isSignedIn() && request.resource.data.buyerId == uid();
 
-      // Sửa/xóa đơn: chỉ admin
-      allow update, delete: if isAdmin();
+      // Cập nhật: admin toàn quyền; seller có sản phẩm trong đơn được đổi
+      // DUY NHẤT field "status" (trạng thái giao hàng)
+      allow update: if isAdmin()
+        || (isSignedIn()
+            && resource.data.sellerIds != null
+            && uid() in resource.data.sellerIds
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']));
+
+      // Xóa đơn: chỉ admin
+      allow delete: if isAdmin();
     }
 
     // ---------- CHATS + MESSAGES ----------

@@ -108,6 +108,17 @@ class SearchFragment : Fragment(), CategoryClickListener, SearchView.OnQueryText
 
         bnd.searchView.setOnQueryTextListener(this)
 
+        bnd.btnSortAsc.setOnClickListener {
+            viewModel.applyPriceAndSort(
+                bnd.etMinPrice.text.toString(), bnd.etMaxPrice.text.toString(), "asc"
+            )
+        }
+        bnd.btnSortDesc.setOnClickListener {
+            viewModel.applyPriceAndSort(
+                bnd.etMinPrice.text.toString(), bnd.etMaxPrice.text.toString(), "desc"
+            )
+        }
+
     }
 
     private fun searchQuery(query:String?){

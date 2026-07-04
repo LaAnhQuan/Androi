@@ -7,5 +7,6 @@ data class Order(
     var total: Double? = 0.0,
     var createdAt: Long? = 0L,
     // distinct seller ids present in this order (lets sellers query their shop orders)
-    var sellerIds: List<String>? = null
+    var sellerIds: List<String>? = null,
+    var status: String? = "pending"   // pending -> shipping -> completed
 )

@@ -33,11 +33,13 @@ class OrderAdapter(private var orders: List<Order>) :
         private val tvDate: TextView = itemView.findViewById(R.id.tvOrderDate)
         private val tvItems: TextView = itemView.findViewById(R.id.tvOrderItems)
         private val tvTotal: TextView = itemView.findViewById(R.id.tvOrderTotal)
+        private val tvStatus: TextView = itemView.findViewById(R.id.tvOrderStatus)
 
         @SuppressLint("SetTextI18n")
         fun bind(order: Order) {
 
             tvDate.text = dateFormat.format(Date(order.createdAt ?: 0L))
+            tvStatus.text = statusLabel(order.status)
 
             val items = order.items ?: emptyList()
             tvItems.text = items.joinToString("\n") { item ->
@@ -53,6 +55,14 @@ class OrderAdapter(private var orders: List<Order>) :
 
         }
 
+    }
+
+    companion object {
+        fun statusLabel(status: String?): String = when (status) {
+            "shipping" -> "🚚 Shipping"
+            "completed" -> "✅ Completed"
+            else -> "🕒 Pending"
+        }
     }
 
 }

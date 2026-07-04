@@ -91,6 +91,23 @@ class SearchViewModel(
 
     }
 
+    // advanced filter: price range + sort by price
+    fun applyPriceAndSort(minText: String, maxText: String, sort: String) {
+
+        val min = minText.toDoubleOrNull() ?: 0.0
+        val max = maxText.toDoubleOrNull() ?: Double.MAX_VALUE
+
+        var list = productList.filter { (it.price ?: 0.0) in min..max }
+        list = when (sort) {
+            "asc" -> list.sortedBy { it.price ?: 0.0 }
+            "desc" -> list.sortedByDescending { it.price ?: 0.0 }
+            else -> list
+        }
+
+        _searchLiveData.postValue(DataState.Success(list))
+
+    }
+
     fun searchProducts(isSearch: Boolean = false, query: String = "") {
 
         if (productList.isNotEmpty()) {

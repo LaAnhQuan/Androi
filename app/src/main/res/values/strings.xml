@@ -116,6 +116,11 @@
     <string name="shop_orders">Shop Orders</string>
     <string name="my_shop_orders">SHOP ORDERS</string>
     <string name="no_shop_orders">No orders for your shop yet</string>
+    <string name="update_status">Update status</string>
+    <string name="order_status">Status: %s</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_shipping">Shipping</string>
+    <string name="status_completed">Completed</string>
 
     <!-- Profile -->
     <string name="sign_out">SIGN OUT</string>
@@ -125,6 +130,11 @@
 
     <!-- Search -->
     <string name="search_hint">Search a product…</string>
+    <string name="min_price">Min $</string>
+    <string name="max_price">Max $</string>
+    <string name="sort_price_asc">Price ↑</string>
+    <string name="sort_price_desc">Price ↓</string>
+    <string name="apply_filter">Filter</string>
 
     <!-- Basket -->
     <string name="my_basket">MY BASKET</string>
