@@ -9,24 +9,40 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.shopping.app.R
 import com.shopping.app.data.model.DataState
 import com.shopping.app.data.model.Product
+import com.shopping.app.data.model.Review
+import com.shopping.app.data.preference.UserPref
 import com.shopping.app.data.repository.basket.BasketRepositoryImpl
+import com.shopping.app.data.repository.review.ReviewRepositoryImpl
 import com.shopping.app.databinding.FragmentProductDetailsBinding
 import com.shopping.app.ui.loadingprogress.LoadingProgressBar
+import com.shopping.app.ui.productdetail.adapter.ReviewAdapter
 import com.shopping.app.ui.productdetail.viewmodel.ProductDetailViewModel
 import com.shopping.app.ui.productdetail.viewmodel.ProductDetailViewModelFactory
+import com.shopping.app.ui.productdetail.viewmodel.ReviewViewModel
+import com.shopping.app.ui.productdetail.viewmodel.ReviewViewModelFactory
 import com.shopping.app.utils.Constants
 import com.shopping.app.utils.Constants.PRODUCT_MODEL_NAME
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ProductDetailsFragment : Fragment() {
 
     private lateinit var bnd: FragmentProductDetailsBinding
     private lateinit var loadingProgressBar: LoadingProgressBar
     private var currentProduct: Product? = null
+    private var myName: String = "User"
+
+    private val reviewViewModel by viewModels<ReviewViewModel> {
+        ReviewViewModelFactory(ReviewRepositoryImpl())
+    }
+    private lateinit var reviewAdapter: ReviewAdapter
     private val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModelFactory(
             BasketRepositoryImpl()
@@ -84,6 +100,9 @@ class ProductDetailsFragment : Fragment() {
                 currentProduct = product
                 bnd.dataHolder = product
 
+                setupStock(product)
+                setupReviews(product)
+
                 viewModel.productCountLiveData.observe(viewLifecycleOwner){ value ->
                     bnd.basketCount = value
                 }
@@ -93,9 +112,68 @@ class ProductDetailsFragment : Fragment() {
 
     }
 
+    // show stock; disable buying when out of stock
+    private fun setupStock(product: Product) {
+        val stock = product.stock ?: 0
+        if (stock <= 0) {
+            bnd.tvStock.text = getString(R.string.out_of_stock)
+            bnd.tvStock.setTextColor(resources.getColor(android.R.color.holo_red_dark, null))
+            bnd.btnAddBasket.isEnabled = false
+            bnd.btnAddBasket.alpha = 0.5f
+        } else {
+            bnd.tvStock.text = getString(R.string.in_stock, stock)
+        }
+    }
+
+    // reviews: load list + prepare my display name for submitting
+    private fun setupReviews(product: Product) {
+
+        reviewAdapter = ReviewAdapter(emptyList())
+        bnd.rvReviews.layoutManager = LinearLayoutManager(requireContext())
+        bnd.rvReviews.adapter = reviewAdapter
+
+        val userPref = UserPref(requireContext())
+        CoroutineScope(Dispatchers.Main).launch { myName = userPref.getUsername().ifBlank { "User" } }
+
+        reviewViewModel.reviewsLiveData.observe(viewLifecycleOwner) { list ->
+            reviewAdapter.update(list)
+            bnd.tvNoReviews.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+        }
+
+        product.id?.let { reviewViewModel.listen(it) }
+
+    }
+
+    fun submitReview() {
+
+        val product = currentProduct ?: return
+        val rating = bnd.rbReviewInput.rating
+        val comment = bnd.etReviewComment.text.toString().trim()
+
+        if (rating <= 0f || comment.isEmpty()) {
+            Toast.makeText(context, getString(R.string.review_empty), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val review = Review(
+            productId = product.id,
+            userId = FirebaseAuth.getInstance().uid,
+            userName = myName,
+            rating = rating,
+            comment = comment
+        )
+        reviewViewModel.submit(review)
+
+        bnd.etReviewComment.setText("")
+        bnd.rbReviewInput.rating = 5f
+        Toast.makeText(context, getString(R.string.review_added), Toast.LENGTH_SHORT).show()
+
+    }
+
     // called by the "Add Basket" button — slides up a bottom sheet to pick color/size/quantity
     fun addToBasket() {
         val product = currentProduct ?: return
+        if ((product.stock ?: 0) <= 0) return
         VariantBottomSheet.newInstance(product).show(childFragmentManager, "variant")
     }
 

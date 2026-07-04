@@ -19,4 +19,9 @@
     <color name="red">#E14034</color>
     <color name="green">#4CAF50</color>
 
+    <!-- Shopee-style -->
+    <color name="shopee_orange">#EE4D2D</color>
+    <color name="bg_light">#F2F2F5</color>
+    <color name="card_white">#FFFFFF</color>
+
 </resources>

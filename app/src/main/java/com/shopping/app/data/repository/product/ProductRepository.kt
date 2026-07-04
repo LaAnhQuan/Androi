@@ -16,4 +16,6 @@ interface ProductRepository {
 
     fun deleteProduct(productId: String): Task<Void>
 
+    fun decreaseStock(productId: String, amount: Int): Task<Void>
+
 }

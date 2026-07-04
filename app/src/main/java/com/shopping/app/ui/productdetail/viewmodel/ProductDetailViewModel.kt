@@ -53,7 +53,8 @@ class ProductDetailViewModel(private val basketRepository: BasketRepository) : V
             productCountLiveData.value,
             product.sellerId,
             color,
-            size
+            size,
+            product.id
         )
 
         var feedback: ListenerRegistration? = null

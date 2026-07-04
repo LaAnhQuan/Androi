@@ -61,8 +61,15 @@ service cloud.firestore {
         && request.resource.data.sellerId == uid();
 
       // Sửa/xóa: admin hoặc chính chủ sản phẩm
-      allow update, delete: if isAdmin()
+      allow delete: if isAdmin()
         || (isSignedIn() && resource.data.sellerId == uid());
+
+      // Update: admin / chủ sản phẩm sửa mọi thứ;
+      // người mua chỉ được thay đổi DUY NHẤT field "stock" (giảm tồn kho khi mua)
+      allow update: if isAdmin()
+        || (isSignedIn() && resource.data.sellerId == uid())
+        || (isSignedIn()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock']));
     }
 
     // ---------- CATEGORIES (danh mục) ----------
@@ -75,6 +82,16 @@ service cloud.firestore {
     match /banners/{bannerId} {
       allow read: if true;         // ai cũng xem banner
       allow write: if isAdmin();   // chỉ admin quản lý banner
+    }
+
+    // ---------- REVIEWS (đánh giá / bình luận) ----------
+    match /reviews/{reviewId} {
+      allow read: if true;         // ai cũng xem đánh giá
+      // đăng nhập mới được viết, và userId phải là chính mình
+      allow create: if isSignedIn() && request.resource.data.userId == uid();
+      // sửa/xóa đánh giá của mình; admin toàn quyền
+      allow update, delete: if isAdmin()
+        || (isSignedIn() && resource.data.userId == uid());
     }
 
     // ---------- BASKET (giỏ hàng): basket/{userId}/products/{productId} ----------

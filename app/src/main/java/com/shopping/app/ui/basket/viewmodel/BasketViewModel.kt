@@ -12,6 +12,7 @@ import com.shopping.app.data.model.ProductBasket
 import com.shopping.app.data.repository.basket.BasketRepository
 import com.shopping.app.data.repository.notification.NotificationRepositoryImpl
 import com.shopping.app.data.repository.order.OrderRepository
+import com.shopping.app.data.repository.product.ProductRepositoryImpl
 import com.shopping.app.utils.Constants
 
 class BasketViewModel(
@@ -142,6 +143,16 @@ class BasketViewModel(
                 sellerIds = sellerIds
             )
             orderRepository.addOrder(order)
+
+            // decrease stock for each purchased product
+            val productRepository = ProductRepositoryImpl()
+            basketList.forEach { item ->
+                val pid = item.productId
+                val qty = item.piece ?: 0
+                if (!pid.isNullOrBlank() && qty > 0) {
+                    productRepository.decreaseStock(pid, qty)
+                }
+            }
 
             val notificationRepository = NotificationRepositoryImpl()
 

@@ -2,6 +2,7 @@ package com.shopping.app.data.repository.product
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -33,6 +34,12 @@ class ProductRepositoryImpl : ProductRepository {
 
     override fun deleteProduct(productId: String): Task<Void> {
         return products().document(productId).delete()
+    }
+
+    override fun decreaseStock(productId: String, amount: Int): Task<Void> {
+        // atomic decrement of the stock field
+        return products().document(productId)
+            .update("stock", FieldValue.increment(-amount.toLong()))
     }
 
 }

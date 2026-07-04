@@ -110,6 +110,16 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tvStock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/main_color"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:layout_marginTop="8dp"/>
+
+                    <TextView
                         android:id="@+id/tvDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -129,6 +139,82 @@
                         app:backgroundTint="@null"
                         android:background="@drawable/bg_auth_button"
                         android:onClick="@{v -> productDetailsFragment.chatWithSeller()}"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray"
+                        android:layout_marginTop="20dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reviews_title"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginTop="16dp"/>
+
+                    <!-- write a review -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/write_review"
+                        android:textColor="@color/black_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginTop="10dp"/>
+
+                    <RatingBar
+                        android:id="@+id/rbReviewInput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:stepSize="1"
+                        android:rating="5"
+                        android:progressTint="@color/rating_bar_color"
+                        android:layout_marginTop="4dp"/>
+
+                    <EditText
+                        android:id="@+id/etReviewComment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:minLines="2"
+                        android:gravity="top"
+                        android:hint="@string/review_hint"
+                        android:background="@drawable/bg_auth_text_field"
+                        android:padding="10dp"
+                        android:layout_marginTop="8dp"
+                        android:autofillHints="off"/>
+
+                    <Button
+                        android:id="@+id/btnSubmitReview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/submit_review"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="8dp"
+                        app:backgroundTint="@null"
+                        android:background="@drawable/bg_auth_button"
+                        android:onClick="@{v -> productDetailsFragment.submitReview()}"/>
+
+                    <TextView
+                        android:id="@+id/tvNoReviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_reviews"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:layout_marginTop="12dp"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvReviews"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:layout_marginTop="8dp"/>
 
                 </LinearLayout>
 

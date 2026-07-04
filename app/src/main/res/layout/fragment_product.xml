@@ -5,7 +5,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/bg_light">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/bannerPager"
@@ -32,18 +33,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHomeCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp"
+            android:clipToPadding="false"
+            android:background="@color/card_white"
+            app:layout_constraintTop_toBottomOf="@id/bannerDots"/>
+
         <GridView
             android:id="@+id/gridViewProduct"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:columnWidth="150dp"
-            android:horizontalSpacing="15dp"
+            android:horizontalSpacing="10dp"
             android:numColumns="2"
-            android:verticalSpacing="15dp"
-            android:padding="8dp"
+            android:verticalSpacing="10dp"
+            android:padding="10dp"
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"
-            app:layout_constraintTop_toBottomOf="@id/bannerDots"
+            app:layout_constraintTop_toBottomOf="@id/rvHomeCategories"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -12,17 +12,21 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.shopping.app.R
 import com.shopping.app.data.model.Banner
 import com.shopping.app.data.model.DataState
+import com.shopping.app.data.model.Product
 import com.shopping.app.data.preference.UserPref
 import com.shopping.app.data.repository.banner.BannerRepositoryImpl
+import com.shopping.app.data.repository.category.CategoryRepositoryImpl
 import com.shopping.app.data.repository.product.ProductRepositoryImpl
 import com.shopping.app.databinding.FragmentProductBinding
 import com.shopping.app.ui.loadingprogress.LoadingProgressBar
 import com.shopping.app.ui.main.product.adapter.BannerAdapter
+import com.shopping.app.ui.main.product.adapter.HomeCategoryAdapter
 import com.shopping.app.ui.main.product.adapter.ProductAdapter
 import com.shopping.app.ui.main.product.viewmodel.ProductViewModel
 import com.shopping.app.ui.main.product.viewmodel.ProductViewModelFactory
@@ -37,6 +41,7 @@ class ProductFragment : Fragment() {
     private lateinit var productAdapter: ProductAdapter
     private lateinit var loadingProgressBar: LoadingProgressBar
 
+    private var allProducts: List<Product> = emptyList()
     private lateinit var bannerAdapter: BannerAdapter
     private val bannerHandler = Handler(Looper.getMainLooper())
     private val bannerRunnable = object : Runnable {
@@ -66,6 +71,7 @@ class ProductFragment : Fragment() {
         loadingProgressBar = LoadingProgressBar(requireContext())
 
         setupBanner()
+        setupCategoryRow()
         setupAddProductButton()
 
         viewModel.productLiveData.observe(viewLifecycleOwner){
@@ -75,8 +81,8 @@ class ProductFragment : Fragment() {
                     loadingProgressBar.hide()
                     it.data?.let { safeData ->
 
-                        productAdapter = ProductAdapter(requireContext(), safeData, findNavController())
-                        bnd.gridViewProduct.adapter = productAdapter
+                        allProducts = safeData
+                        showProducts(safeData)
 
                     } ?: run {
                         Snackbar.make(bnd.root, getString(R.string.no_data), Snackbar.LENGTH_LONG).show()
@@ -92,6 +98,29 @@ class ProductFragment : Fragment() {
             }
 
         }
+
+    }
+
+    private fun showProducts(list: List<Product>) {
+        productAdapter = ProductAdapter(requireContext(), list, findNavController())
+        bnd.gridViewProduct.adapter = productAdapter
+    }
+
+    // horizontal category quick-filter row (Shopee-style)
+    private fun setupCategoryRow() {
+
+        bnd.rvHomeCategories.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        CategoryRepositoryImpl().getCategories()
+            .addOnSuccessListener { snapshot ->
+                val cats = snapshot.documents.mapNotNull { it.getString("name") }.sorted()
+                val withAll = listOf(getString(R.string.all)) + cats
+                bnd.rvHomeCategories.adapter = HomeCategoryAdapter(withAll) { selected ->
+                    if (selected == getString(R.string.all)) showProducts(allProducts)
+                    else showProducts(allProducts.filter { it.category == selected })
+                }
+            }
 
     }
 

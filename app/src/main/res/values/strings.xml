@@ -59,6 +59,7 @@
     <string name="products">Products</string>
     <string name="search">Search</string>
     <string name="profile">Profile</string>
+    <string name="all">All</string>
     <string name="notifications">Notifications</string>
     <string name="no_notifications">No notifications yet</string>
     <string name="notif_new_message">New message</string>
@@ -70,9 +71,18 @@
     <!-- Product Details -->
     <string name="rating_count">%s Rating</string>
     <string name="add_basket">Add Basket (%d)</string>
+    <string name="in_stock">In stock: %d</string>
+    <string name="out_of_stock">Out of stock</string>
     <string name="increase_char">+</string>
     <string name="reduce_char">-</string>
     <string name="product_added_basket_message">Product added to basket.</string>
+    <string name="reviews_title">Ratings &amp; Reviews</string>
+    <string name="write_review">Write your review</string>
+    <string name="review_hint">Share your thoughts about this product…</string>
+    <string name="submit_review">SUBMIT REVIEW</string>
+    <string name="no_reviews">No reviews yet. Be the first!</string>
+    <string name="review_added">Thanks for your review!</string>
+    <string name="review_empty">Please add a rating and comment.</string>
 
     <!-- Admin -->
     <string name="admin_panel">ADMIN PANEL</string>
