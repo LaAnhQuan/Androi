@@ -1,6 +1,8 @@
 package com.shopping.app.ui.main.product
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +13,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import com.shopping.app.R
+import com.shopping.app.data.model.Banner
 import com.shopping.app.data.model.DataState
 import com.shopping.app.data.preference.UserPref
+import com.shopping.app.data.repository.banner.BannerRepositoryImpl
 import com.shopping.app.data.repository.product.ProductRepositoryImpl
 import com.shopping.app.databinding.FragmentProductBinding
 import com.shopping.app.ui.loadingprogress.LoadingProgressBar
+import com.shopping.app.ui.main.product.adapter.BannerAdapter
 import com.shopping.app.ui.main.product.adapter.ProductAdapter
 import com.shopping.app.ui.main.product.viewmodel.ProductViewModel
 import com.shopping.app.ui.main.product.viewmodel.ProductViewModelFactory
@@ -30,6 +36,18 @@ class ProductFragment : Fragment() {
     private lateinit var bnd: FragmentProductBinding
     private lateinit var productAdapter: ProductAdapter
     private lateinit var loadingProgressBar: LoadingProgressBar
+
+    private lateinit var bannerAdapter: BannerAdapter
+    private val bannerHandler = Handler(Looper.getMainLooper())
+    private val bannerRunnable = object : Runnable {
+        override fun run() {
+            if (bannerAdapter.itemCount > 1) {
+                val next = (bnd.bannerPager.currentItem + 1) % bannerAdapter.itemCount
+                bnd.bannerPager.setCurrentItem(next, true)
+            }
+            bannerHandler.postDelayed(this, 3500)
+        }
+    }
     private val viewModel by viewModels<ProductViewModel> {
         ProductViewModelFactory(
             ProductRepositoryImpl()
@@ -47,6 +65,7 @@ class ProductFragment : Fragment() {
 
         loadingProgressBar = LoadingProgressBar(requireContext())
 
+        setupBanner()
         setupAddProductButton()
 
         viewModel.productLiveData.observe(viewLifecycleOwner){
@@ -74,6 +93,32 @@ class ProductFragment : Fragment() {
 
         }
 
+    }
+
+    // Auto-sliding banner carousel with dot indicators (Shopee-style)
+    private fun setupBanner() {
+
+        bannerAdapter = BannerAdapter(emptyList())
+        bnd.bannerPager.adapter = bannerAdapter
+        TabLayoutMediator(bnd.bannerDots, bnd.bannerPager) { _, _ -> }.attach()
+
+        BannerRepositoryImpl().getBanners()
+            .addOnSuccessListener { snapshot ->
+                val banners = snapshot.toObjects(Banner::class.java)
+                    .sortedBy { it.order ?: 0 }
+                bannerAdapter.update(banners)
+            }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        bannerHandler.postDelayed(bannerRunnable, 3500)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        bannerHandler.removeCallbacks(bannerRunnable)
     }
 
     // Show the "+" button only for seller / admin, then open the Add Product screen
