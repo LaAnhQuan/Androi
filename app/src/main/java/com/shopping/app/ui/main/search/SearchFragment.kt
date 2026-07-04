@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.shopping.app.R
 import com.shopping.app.data.model.CategoryModel
 import com.shopping.app.data.model.DataState
+import com.shopping.app.data.repository.category.CategoryRepositoryImpl
 import com.shopping.app.data.repository.search.SearchRepositoryImpl
 import com.shopping.app.databinding.FragmentSearchBinding
 import com.shopping.app.ui.loadingprogress.LoadingProgressBar
@@ -28,7 +29,8 @@ class SearchFragment : Fragment(), CategoryClickListener, SearchView.OnQueryText
     private lateinit var loadingProgressBar: LoadingProgressBar
     private val viewModel by viewModels<SearchViewModel> {
         SearchViewModelFactory(
-            SearchRepositoryImpl()
+            SearchRepositoryImpl(),
+            CategoryRepositoryImpl()
         )
     }
 

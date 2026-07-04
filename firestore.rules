@@ -65,6 +65,12 @@ service cloud.firestore {
         || (isSignedIn() && resource.data.sellerId == uid());
     }
 
+    // ---------- CATEGORIES (danh mục) ----------
+    match /categories/{categoryId} {
+      allow read: if true;                 // ai cũng xem danh mục
+      allow write: if isSellerOrAdmin();    // seller/admin quản lý danh mục
+    }
+
     // ---------- BASKET (giỏ hàng): basket/{userId}/products/{productId} ----------
     match /basket/{userId}/products/{productId} {
       allow read, write: if isSignedIn() && uid() == userId;

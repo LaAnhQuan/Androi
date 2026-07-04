@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import com.shopping.app.R
 import com.shopping.app.data.model.DataState
 import com.shopping.app.data.model.Product
 import com.shopping.app.data.preference.UserPref
+import com.shopping.app.data.repository.category.CategoryRepositoryImpl
 import com.shopping.app.data.repository.product.ProductRepositoryImpl
 import com.shopping.app.databinding.FragmentAddProductBinding
 import com.shopping.app.ui.addproduct.viewmodel.AddProductViewModel
@@ -28,6 +30,7 @@ class AddProductFragment : Fragment() {
 
     private lateinit var bnd: FragmentAddProductBinding
     private lateinit var loadingProgressBar: LoadingProgressBar
+    private var editCategory: String? = null   // category to preselect in edit mode
     private val viewModel by viewModels<AddProductViewModel> {
         AddProductViewModelFactory(ProductRepositoryImpl())
     }
@@ -56,14 +59,16 @@ class AddProductFragment : Fragment() {
         if (editJson != null) {
             val product = Product.fromJson(editJson)
             viewModel.editingProduct = product
+            editCategory = product.category
             bnd.tvAddTitle.text = getString(R.string.edit_product)
             bnd.etTitle.setText(product.title ?: "")
             bnd.etPrice.setText(product.price?.toString() ?: "")
             bnd.etImage.setText(product.image ?: "")
-            bnd.etCategory.setText(product.category ?: "")
             bnd.etStock.setText(product.stock?.toString() ?: "")
             bnd.etDescription.setText(product.description ?: "")
         }
+
+        loadCategories()
 
         viewModel.addProductLiveData.observe(viewLifecycleOwner) {
             when (it) {
@@ -81,6 +86,31 @@ class AddProductFragment : Fragment() {
                 }
             }
         }
+
+    }
+
+    // load the standardized category list from Firestore into the dropdown
+    private fun loadCategories() {
+
+        CategoryRepositoryImpl().getCategories()
+            .addOnSuccessListener { snapshot ->
+                val categories = snapshot.documents
+                    .mapNotNull { it.getString("name") }
+                    .sorted()
+
+                val adapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    categories
+                )
+                bnd.spinnerCategory.adapter = adapter
+
+                // preselect the product's current category when editing
+                editCategory?.let { cat ->
+                    val index = categories.indexOf(cat)
+                    if (index >= 0) bnd.spinnerCategory.setSelection(index)
+                }
+            }
 
     }
 
