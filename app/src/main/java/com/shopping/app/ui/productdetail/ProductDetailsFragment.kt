@@ -93,6 +93,12 @@ class ProductDetailsFragment : Fragment() {
 
     }
 
+    // called by the "Add Basket" button — slides up a bottom sheet to pick color/size/quantity
+    fun addToBasket() {
+        val product = currentProduct ?: return
+        VariantBottomSheet.newInstance(product).show(childFragmentManager, "variant")
+    }
+
     fun goBack(){
         findNavController().popBackStack()
     }

@@ -204,7 +204,7 @@
                     android:text="@{@string/add_basket(basketCount)}"
                     android:textColor="@color/white"
                     app:backgroundTint="@null"
-                    android:onClick="@{v -> viewModel.checkProduct(dataHolder)}"/>
+                    android:onClick="@{v -> productDetailsFragment.addToBasket()}"/>
 
                 <TextView
                     android:id="@+id/btnIncreaseCount"

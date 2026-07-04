@@ -40,7 +40,14 @@ class OrderAdapter(private var orders: List<Order>) :
             tvDate.text = dateFormat.format(Date(order.createdAt ?: 0L))
 
             val items = order.items ?: emptyList()
-            tvItems.text = items.joinToString("\n") { "• ${it.title}  x${it.piece}" }
+            tvItems.text = items.joinToString("\n") { item ->
+                val variant = listOfNotNull(
+                    item.color?.takeIf { it.isNotBlank() },
+                    item.size?.takeIf { it.isNotBlank() }
+                ).joinToString(" / ")
+                val v = if (variant.isNotBlank()) " ($variant)" else ""
+                "• ${item.title}$v  x${item.piece}"
+            }
 
             tvTotal.text = itemView.context.getString(R.string.order_total, order.total ?: 0.0)
 

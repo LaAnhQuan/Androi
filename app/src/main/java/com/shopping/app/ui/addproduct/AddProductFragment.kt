@@ -65,6 +65,8 @@ class AddProductFragment : Fragment() {
             bnd.etPrice.setText(product.price?.toString() ?: "")
             bnd.etImage.setText(product.image ?: "")
             bnd.etStock.setText(product.stock?.toString() ?: "")
+            bnd.etColors.setText(product.colors?.joinToString(", ") ?: "")
+            bnd.etSizes.setText(product.sizes?.joinToString(", ") ?: "")
             bnd.etDescription.setText(product.description ?: "")
         }
 

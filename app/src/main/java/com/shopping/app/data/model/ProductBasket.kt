@@ -6,5 +6,7 @@ class ProductBasket(
     var image: String? = "",
     var price: Double? = 0.0,
     var piece: Int? = 0,
-    var sellerId: String? = ""
+    var sellerId: String? = "",
+    var color: String? = "",
+    var size: String? = ""
 )

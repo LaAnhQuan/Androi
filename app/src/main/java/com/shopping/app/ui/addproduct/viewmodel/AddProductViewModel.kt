@@ -25,7 +25,9 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
         description: String,
         image: String,
         category: String,
-        stockText: String
+        stockText: String,
+        colorsText: String = "",
+        sizesText: String = ""
     ) {
 
         _addProductLiveData.value = DataState.Loading()
@@ -42,6 +44,8 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
         }
 
         val stock = stockText.toIntOrNull() ?: 0
+        val colors = parseList(colorsText)
+        val sizes = parseList(sizesText)
         val editing = editingProduct
 
         if (editing != null) {
@@ -53,6 +57,8 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
             editing.image = image
             editing.category = if (category.isBlank()) "other" else category
             editing.stock = stock
+            editing.colors = colors
+            editing.sizes = sizes
 
             productRepository.updateProduct(editing)
                 .addOnSuccessListener { _addProductLiveData.value = DataState.Success(true) }
@@ -67,7 +73,9 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
                 price = price,
                 title = title,
                 sellerName = sellerName,
-                stock = stock
+                stock = stock,
+                colors = colors,
+                sizes = sizes
             )
 
             productRepository.addProduct(product)
@@ -76,6 +84,11 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
 
         }
 
+    }
+
+    // "Red, Blue , Black" -> ["Red","Blue","Black"]
+    private fun parseList(text: String): List<String> {
+        return text.split(",").map { it.trim() }.filter { it.isNotBlank() }
     }
 
 }

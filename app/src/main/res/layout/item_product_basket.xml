@@ -63,6 +63,14 @@
                     android:layout_weight="1"/>
 
                 <TextView
+                    android:id="@+id/tvVariant"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textColor="@color/black_secondary"
+                    android:textSize="13sp"/>
+
+                <TextView
                     android:id="@+id/tvPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

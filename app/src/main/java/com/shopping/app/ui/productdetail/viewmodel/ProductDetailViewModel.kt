@@ -34,17 +34,26 @@ class ProductDetailViewModel(private val basketRepository: BasketRepository) : V
         if(value < 100) productCountLiveData.value = value+1
     }
 
-    fun checkProduct(product: Product){
+    fun checkProduct(product: Product, color: String = "", size: String = ""){
 
         _addBasketLiveData.value = DataState.Loading()
 
+        // different color/size of the same product become separate basket lines
+        val variantSuffix = buildString {
+            if (color.isNotBlank()) append("_").append(color)
+            if (size.isNotBlank()) append("_").append(size)
+        }
+        val basketId = (product.id ?: "") + variantSuffix
+
         val productBasket = ProductBasket(
-            product.id,
+            basketId,
             product.title,
             product.image,
             product.price,
             productCountLiveData.value,
-            product.sellerId
+            product.sellerId,
+            color,
+            size
         )
 
         var feedback: ListenerRegistration? = null

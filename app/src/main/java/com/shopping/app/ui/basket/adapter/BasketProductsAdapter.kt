@@ -1,6 +1,7 @@
 package com.shopping.app.ui.basket.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.shopping.app.data.model.ProductBasket
@@ -29,6 +30,14 @@ class BasketProductsAdapter(
         fun bind(basketProduct: ProductBasket) {
             binding.dataHolder = basketProduct
             binding.productAdapter = this@BasketProductsAdapter
+
+            val variant = listOfNotNull(
+                basketProduct.color?.takeIf { it.isNotBlank() },
+                basketProduct.size?.takeIf { it.isNotBlank() }
+            ).joinToString(" / ")
+            binding.tvVariant.text = variant
+            binding.tvVariant.visibility = if (variant.isBlank()) View.GONE else View.VISIBLE
+
             binding.executePendingBindings()
         }
 

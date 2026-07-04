@@ -45,6 +45,12 @@
     <string name="product_image_url">Image URL</string>
     <string name="product_category">Category</string>
     <string name="product_stock">Stock</string>
+    <string name="product_colors">Colors (comma separated, e.g. Red, Blue)</string>
+    <string name="product_sizes">Sizes (comma separated, e.g. S, M, L)</string>
+    <string name="choose_color">Color</string>
+    <string name="choose_size">Size</string>
+    <string name="quantity">Quantity</string>
+    <string name="add_to_basket_confirm">ADD TO BASKET</string>
     <string name="save">SAVE</string>
     <string name="product_added_message">Product added successfully.</string>
     <string name="product_fields_empty">Please fill name, price and image URL.</string>

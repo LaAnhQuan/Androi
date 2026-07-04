@@ -44,7 +44,14 @@ class SellerOrderAdapter(
             // only this seller's items in the order
             val myItems = (order.items ?: emptyList()).filter { it.sellerId == myUid }
 
-            tvItems.text = myItems.joinToString("\n") { "• ${it.title}  x${it.piece}" }
+            tvItems.text = myItems.joinToString("\n") { item ->
+                val variant = listOfNotNull(
+                    item.color?.takeIf { it.isNotBlank() },
+                    item.size?.takeIf { it.isNotBlank() }
+                ).joinToString(" / ")
+                val v = if (variant.isNotBlank()) " ($variant)" else ""
+                "• ${item.title}$v  x${item.piece}"
+            }
 
             val subtotal = myItems.sumOf { (it.price ?: 0.0) * (it.piece ?: 0) }
             tvTotal.text = itemView.context.getString(R.string.order_total, subtotal)

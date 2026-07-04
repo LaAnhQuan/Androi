@@ -26,7 +26,11 @@ data class Product(
     @SerializedName("sellerName")
     var sellerName: String? = null,
     @SerializedName("stock")
-    var stock: Int? = null
+    var stock: Int? = null,
+    @SerializedName("colors")
+    var colors: List<String>? = null,
+    @SerializedName("sizes")
+    var sizes: List<String>? = null
 ): Parcelable {
 
     // json convert method
