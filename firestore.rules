@@ -84,6 +84,12 @@ service cloud.firestore {
       allow write: if isAdmin();   // chỉ admin quản lý banner
     }
 
+    // ---------- VOUCHERS (mã giảm giá) ----------
+    match /vouchers/{code} {
+      allow read: if isSignedIn();   // đăng nhập để áp mã
+      allow write: if isAdmin();     // chỉ admin tạo/sửa mã
+    }
+
     // ---------- REVIEWS (đánh giá / bình luận) ----------
     match /reviews/{reviewId} {
       allow read: if true;         // ai cũng xem đánh giá

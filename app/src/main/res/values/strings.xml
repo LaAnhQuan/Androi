@@ -139,6 +139,14 @@
     <!-- Basket -->
     <string name="my_basket">MY BASKET</string>
     <string name="purchase">PURCHASE (%.2f$)</string>
+    <string name="voucher_hint">Enter voucher code</string>
+    <string name="apply_voucher">APPLY</string>
+    <string name="discount_label">Discount: -%.2f$</string>
+    <string name="select_voucher">Select a voucher</string>
+    <string name="greater_than">\></string>
+    <string name="choose_voucher_title">Choose a voucher</string>
+    <string name="no_voucher">No voucher</string>
+    <string name="no_vouchers_available">No vouchers available</string>
     <string name="product_reduce_message">Product reduced</string>
     <string name="product_increased_message">Product increased</string>
     <string name="product_deleted_message">Product deleted</string>

@@ -15,8 +15,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.shopping.app.R
 import com.shopping.app.data.model.DataState
 import com.shopping.app.data.model.ProductBasket
+import com.shopping.app.data.model.Voucher
 import com.shopping.app.data.repository.basket.BasketRepositoryImpl
 import com.shopping.app.data.repository.order.OrderRepositoryImpl
+import com.shopping.app.data.repository.voucher.VoucherRepositoryImpl
 import com.shopping.app.databinding.FragmentBasketBinding
 import com.shopping.app.ui.basket.adapter.BasketProductsAdapter
 import com.shopping.app.ui.basket.viewmodel.BasketViewModel
@@ -93,6 +95,18 @@ class BasketFragment : BottomSheetDialogFragment(), ProductPieceUpdateListener {
             bnd.total = it
         }
 
+        viewModel.finalTotalLiveData.observe(viewLifecycleOwner) {
+            bnd.finalTotal = it
+        }
+
+        viewModel.discountLiveData.observe(viewLifecycleOwner) {
+            bnd.discount = it
+        }
+
+        viewModel.voucherMsgLiveData.observe(viewLifecycleOwner) {
+            Snackbar.make(bnd.root, it, Snackbar.LENGTH_SHORT).show()
+        }
+
 
         viewModel.updateProductPieceLiveData.observe(viewLifecycleOwner) {
 
@@ -134,6 +148,50 @@ class BasketFragment : BottomSheetDialogFragment(), ProductPieceUpdateListener {
         }
 
 
+    }
+
+    fun chooseVoucher() {
+
+        VoucherRepositoryImpl().getVouchers()
+            .addOnSuccessListener { snapshot ->
+
+                val vouchers = snapshot.toObjects(Voucher::class.java)
+
+                if (vouchers.isEmpty()) {
+                    Snackbar.make(bnd.root, getString(R.string.no_vouchers_available), Snackbar.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }
+
+                val labels = mutableListOf(getString(R.string.no_voucher))
+                labels.addAll(vouchers.map { formatVoucher(it) })
+
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.choose_voucher_title))
+                    .setItems(labels.toTypedArray()) { d, which ->
+                        d.dismiss()
+                        if (which == 0) {
+                            viewModel.applyVoucher("")
+                            bnd.tvVoucherSelected.text = getString(R.string.select_voucher)
+                        } else {
+                            val v = vouchers[which - 1]
+                            viewModel.applyVoucher(v.code ?: "")
+                            bnd.tvVoucherSelected.text = v.code
+                        }
+                    }
+                    .show()
+
+            }
+            .addOnFailureListener {
+                Snackbar.make(bnd.root, getString(R.string.no_vouchers_available), Snackbar.LENGTH_SHORT).show()
+            }
+
+    }
+
+    private fun formatVoucher(v: Voucher): String {
+        val off = if (v.type == "amount") "-%.0f$".format(v.value ?: 0.0)
+                  else "%.0f%% off".format(v.value ?: 0.0)
+        val min = if ((v.minOrder ?: 0.0) > 0) "  (min %.0f$)".format(v.minOrder ?: 0.0) else ""
+        return "${v.code}   •   $off$min"
     }
 
     fun clearTheBasket() {

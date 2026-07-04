@@ -4,145 +4,196 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
-            name="email"
-            type="String" />
-        <variable
-            name="username"
-            type="String" />
-        <variable
-            name="role"
-            type="String" />
-        <variable
-            name="profileFragment"
+        <variable name="email" type="String" />
+        <variable name="username" type="String" />
+        <variable name="role" type="String" />
+        <variable name="profileFragment"
             type="com.shopping.app.ui.main.profile.ProfileFragment" />
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/bg_light">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/ivProfile"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_profile"
-                android:background="@drawable/bg_arrow_back"
-                android:padding="1dp"
-                android:layout_gravity="center" />
-
-            <TextView
-                android:id="@+id/tvUsername"
+            <!-- Header -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:textColor="@color/main_color"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="20dp"
-                android:text="@{username}"/>
+                android:background="@color/main_color"
+                android:paddingVertical="28dp">
 
-            <TextView
-                android:id="@+id/tvEmail"
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:padding="18dp"
+                    android:src="@drawable/ic_profile"
+                    android:background="@drawable/bg_avatar"
+                    app:tint="@color/main_color"
+                    android:contentDescription="@string/profile"/>
+
+                <TextView
+                    android:id="@+id/tvUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp"
+                    android:text="@{username}"/>
+
+                <TextView
+                    android:id="@+id/tvEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:alpha="0.9"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp"
+                    android:text="@{email}"/>
+
+                <TextView
+                    android:id="@+id/tvRole"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_color"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_category_chip"
+                    android:backgroundTint="@color/white"
+                    android:text="@{role}"/>
+
+            </LinearLayout>
+
+            <!-- Menu card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/main_color"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                android:text="@{email}"/>
+                android:layout_margin="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
 
-            <TextView
-                android:id="@+id/tvRole"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/main_color"
-                android:textSize="16sp"
-                android:layout_marginTop="10dp"
-                android:text="@{`Role: ` + role}"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnShopOrders"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_auth_button"
-                android:text="@string/my_shop_orders"
-                android:textColor="@color/white"
-                android:visibility="gone"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:onClick="@{v -> profileFragment.goShopOrders()}"/>
+                    <!-- Order History -->
+                    <LinearLayout
+                        android:id="@+id/btnOrders"
+                        style="@style/ProfileMenuRow"
+                        android:onClick="@{v -> profileFragment.goOrders()}">
+                        <ImageView style="@style/ProfileMenuIcon"
+                            android:src="@android:drawable/ic_menu_recent_history"/>
+                        <TextView style="@style/ProfileMenuLabel"
+                            android:text="@string/order_history"/>
+                        <TextView style="@style/ProfileMenuArrow" android:text="@string/greater_than"/>
+                    </LinearLayout>
 
-            <Button
-                android:id="@+id/btnMyProducts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_auth_button"
-                android:text="@string/my_products"
-                android:textColor="@color/white"
-                android:visibility="gone"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:onClick="@{v -> profileFragment.goMyProducts()}"/>
+                    <!-- Messages -->
+                    <LinearLayout
+                        android:id="@+id/btnMessages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <View style="@style/ProfileMenuDivider"/>
+                        <LinearLayout
+                            style="@style/ProfileMenuRow"
+                            android:onClick="@{v -> profileFragment.goMessages()}">
+                            <ImageView style="@style/ProfileMenuIcon"
+                                android:src="@android:drawable/ic_dialog_email"/>
+                            <TextView style="@style/ProfileMenuLabel"
+                                android:text="@string/messages"/>
+                            <TextView style="@style/ProfileMenuArrow" android:text="@string/greater_than"/>
+                        </LinearLayout>
+                    </LinearLayout>
 
-            <Button
-                android:id="@+id/btnOrders"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_auth_button"
-                android:text="@string/my_orders"
-                android:textColor="@color/white"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:onClick="@{v -> profileFragment.goOrders()}"/>
+                    <!-- My Products (seller/admin) -->
+                    <LinearLayout
+                        android:id="@+id/btnMyProducts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <View style="@style/ProfileMenuDivider"/>
+                        <LinearLayout
+                            style="@style/ProfileMenuRow"
+                            android:onClick="@{v -> profileFragment.goMyProducts()}">
+                            <ImageView style="@style/ProfileMenuIcon"
+                                android:src="@android:drawable/ic_menu_gallery"/>
+                            <TextView style="@style/ProfileMenuLabel"
+                                android:text="@string/my_products_title"/>
+                            <TextView style="@style/ProfileMenuArrow" android:text="@string/greater_than"/>
+                        </LinearLayout>
+                    </LinearLayout>
 
-            <Button
-                android:id="@+id/btnMessages"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_auth_button"
-                android:text="@string/my_messages"
-                android:textColor="@color/white"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:onClick="@{v -> profileFragment.goMessages()}"/>
+                    <!-- Shop Orders (seller/admin) -->
+                    <LinearLayout
+                        android:id="@+id/btnShopOrders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <View style="@style/ProfileMenuDivider"/>
+                        <LinearLayout
+                            style="@style/ProfileMenuRow"
+                            android:onClick="@{v -> profileFragment.goShopOrders()}">
+                            <ImageView style="@style/ProfileMenuIcon"
+                                android:src="@android:drawable/ic_menu_agenda"/>
+                            <TextView style="@style/ProfileMenuLabel"
+                                android:text="@string/shop_orders"/>
+                            <TextView style="@style/ProfileMenuArrow" android:text="@string/greater_than"/>
+                        </LinearLayout>
+                    </LinearLayout>
 
-            <Button
-                android:id="@+id/btnAdminPanel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_auth_button"
-                android:text="@string/admin_panel"
-                android:textColor="@color/white"
-                android:visibility="gone"
-                app:backgroundTint="@null"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
-                android:onClick="@{v -> profileFragment.goAdminPanel()}"/>
+                    <!-- Admin Panel (admin) -->
+                    <LinearLayout
+                        android:id="@+id/btnAdminPanel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <View style="@style/ProfileMenuDivider"/>
+                        <LinearLayout
+                            style="@style/ProfileMenuRow"
+                            android:onClick="@{v -> profileFragment.goAdminPanel()}">
+                            <ImageView style="@style/ProfileMenuIcon"
+                                android:src="@android:drawable/ic_menu_manage"/>
+                            <TextView style="@style/ProfileMenuLabel"
+                                android:text="@string/admin_panel"/>
+                            <TextView style="@style/ProfileMenuArrow" android:text="@string/greater_than"/>
+                        </LinearLayout>
+                    </LinearLayout>
 
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Sign out -->
             <Button
                 android:id="@+id/btnSignOut"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_signout_button"
                 android:text="@string/sign_out"
                 android:textColor="@color/white"
                 app:backgroundTint="@null"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp"
                 android:onClick="@{v -> profileFragment.signOutDialog()}"/>
 
         </LinearLayout>

@@ -5,18 +5,20 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/bg_light">
 
         <TextView
             android:id="@+id/tvNotifTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/notifications"
-            android:textColor="@color/main_color"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
             android:padding="16dp"
+            android:background="@color/main_color"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.recyclerview.widget.RecyclerView

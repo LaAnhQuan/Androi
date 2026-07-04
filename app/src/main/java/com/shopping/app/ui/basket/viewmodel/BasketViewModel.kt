@@ -9,10 +9,12 @@ import com.shopping.app.data.model.DataState
 import com.shopping.app.data.model.Notification
 import com.shopping.app.data.model.Order
 import com.shopping.app.data.model.ProductBasket
+import com.shopping.app.data.model.Voucher
 import com.shopping.app.data.repository.basket.BasketRepository
 import com.shopping.app.data.repository.notification.NotificationRepositoryImpl
 import com.shopping.app.data.repository.order.OrderRepository
 import com.shopping.app.data.repository.product.ProductRepositoryImpl
+import com.shopping.app.data.repository.voucher.VoucherRepositoryImpl
 import com.shopping.app.utils.Constants
 
 class BasketViewModel(
@@ -41,8 +43,24 @@ class BasketViewModel(
         get() = _purchaseLiveData
 
 
+    // --- voucher / discount ---
+    private val _discountLiveData = MutableLiveData<Double>()
+    val discountLiveData: LiveData<Double> get() = _discountLiveData
+
+    private val _finalTotalLiveData = MutableLiveData<Double>()
+    val finalTotalLiveData: LiveData<Double> get() = _finalTotalLiveData
+
+    private val _voucherMsgLiveData = MutableLiveData<String>()
+    val voucherMsgLiveData: LiveData<String> get() = _voucherMsgLiveData
+
+    private var appliedVoucher: Voucher? = null
+    private var discount: Double = 0.0
+
+
     init {
         _basketTotalLiveData.value = 0.0
+        _discountLiveData.value = 0.0
+        _finalTotalLiveData.value = 0.0
         getProductsBasket()
     }
 
@@ -64,6 +82,7 @@ class BasketViewModel(
 
                     _basketLiveData.value = DataState.Success(basketList)
                     _basketTotalLiveData.value = total
+                    recomputeTotals(total)
 
                 }else{
                     _basketLiveData.value = DataState.Error(error.message!!)
@@ -73,6 +92,56 @@ class BasketViewModel(
 
         }
 
+
+    // --- voucher logic ---
+    fun applyVoucher(code: String) {
+
+        val subtotal = _basketTotalLiveData.value ?: 0.0
+
+        if (code.isBlank()) {
+            appliedVoucher = null
+            recomputeTotals(subtotal)
+            _voucherMsgLiveData.value = "Voucher removed"
+            return
+        }
+
+        VoucherRepositoryImpl().getVoucher(code)
+            .addOnSuccessListener { doc ->
+                val voucher = if (doc.exists()) doc.toObject(Voucher::class.java) else null
+                when {
+                    voucher == null || !voucher.active ->
+                        _voucherMsgLiveData.value = "Invalid voucher code"
+                    subtotal < (voucher.minOrder ?: 0.0) ->
+                        _voucherMsgLiveData.value = "Min order: %.2f$".format(voucher.minOrder ?: 0.0)
+                    else -> {
+                        appliedVoucher = voucher
+                        recomputeTotals(subtotal)
+                        _voucherMsgLiveData.value = "Voucher applied! -%.2f$".format(discount)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                _voucherMsgLiveData.value = "Could not apply voucher"
+            }
+    }
+
+    private fun recomputeTotals(subtotal: Double) {
+        val v = appliedVoucher
+        if (v != null && subtotal < (v.minOrder ?: 0.0)) {
+            appliedVoucher = null   // no longer eligible
+        }
+        discount = appliedVoucher?.let { computeDiscount(it, subtotal) } ?: 0.0
+        _discountLiveData.value = discount
+        _finalTotalLiveData.value = (subtotal - discount).coerceAtLeast(0.0)
+    }
+
+    private fun computeDiscount(v: Voucher, subtotal: Double): Double {
+        val d = when (v.type) {
+            "amount" -> v.value ?: 0.0
+            else -> subtotal * (v.value ?: 0.0) / 100.0
+        }
+        return d.coerceAtMost(subtotal)
+    }
 
     fun increaseProduct(productBasket: ProductBasket){
 
@@ -135,12 +204,16 @@ class BasketViewModel(
                 .filter { it.isNotBlank() }
                 .distinct()
 
+            val finalTotal = _finalTotalLiveData.value ?: (_basketTotalLiveData.value ?: 0.0)
+
             val order = Order(
                 buyerId = uid,
                 items = basketList.toList(),
-                total = _basketTotalLiveData.value ?: 0.0,
+                total = finalTotal,
                 createdAt = System.currentTimeMillis(),
-                sellerIds = sellerIds
+                sellerIds = sellerIds,
+                voucherCode = appliedVoucher?.code,
+                discount = discount
             )
             orderRepository.addOrder(order)
 
@@ -157,7 +230,7 @@ class BasketViewModel(
             val notificationRepository = NotificationRepositoryImpl()
 
             // notify the BUYER that the order was placed successfully
-            val orderTotal = _basketTotalLiveData.value ?: 0.0
+            val orderTotal = finalTotal
             notificationRepository.addNotification(
                 Notification(
                     userId = uid,
@@ -183,6 +256,10 @@ class BasketViewModel(
         basketList.forEach {
             deleteProduct(it)
         }
+
+        // reset voucher after checkout
+        appliedVoucher = null
+        discount = 0.0
 
         _purchaseLiveData.value = DataState.Success(R.string.purchase_success_message)
 
